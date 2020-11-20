@@ -12,7 +12,7 @@ class AboutUs extends Component {
         <div className="div-about-us container">
           <div className="div-team-manager row">
             <div className="col-12 div-title row">
-              <div classNameName="col-12">
+              <div className="col-12">
                 <span className="title">
                   Working like a team
                 </span>

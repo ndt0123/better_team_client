@@ -14,23 +14,23 @@ class SignUp extends Component {
                 <h5 className="card-title text-center">Sign Up</h5>
                 <form className="form-signin">
                   <div className="form-label-group">
-                    <input type="text" id="inputName" className="form-control" placeholder="Name" required autofocus />
-                    <label for="inputName">Name</label>
+                    <input type="text" id="inputName" className="form-control" placeholder="Name" required />
+                    <label htmlFor="inputName">Name</label>
                   </div>
 
                   <div className="form-label-group">
                     <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required />
-                    <label for="inputEmail">Email address</label>
+                    <label htmlFor="inputEmail">Email address</label>
                   </div>
 
                   <div className="form-label-group">
                     <input type="password" id="inputPassword" className="form-control" placeholder="Password" required />
-                    <label for="inputPassword">Password</label>
+                    <label htmlFor="inputPassword">Password</label>
                   </div>
 
                   <div className="form-label-group">
                     <input type="password" id="inputPasswordConfirmation" className="form-control" placeholder="Password confirmation" required />
-                    <label for="inputPasswordConfirmation">Password confirmation</label>
+                    <label htmlFor="inputPasswordConfirmation">Password confirmation</label>
                   </div>
 
                   <button className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign up</button>
