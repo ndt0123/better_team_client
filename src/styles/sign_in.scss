@@ -3,11 +3,6 @@
   --input-padding-y: .75rem;
 }
 
-body {
-  background: #007bff;
-  background: linear-gradient(to right, #0062E6, #33AEFF);
-}
-
 .card-signin {
   border: 0;
   border-radius: 1rem;
@@ -99,12 +94,12 @@ body {
   color: #777;
 }
 
-.btn-google {
+button.btn-google {
   color: white;
   background-color: #ea4335;
 }
 
-.btn-facebook {
+button.btn-facebook {
   color: white;
   background-color: #3b5998;
 }
@@ -116,6 +111,10 @@ body {
   &:hover {
     text-decoration: none;
   }
+}
+
+svg.login-icon-btn {
+  margin-right: 10px;
 }
 
 /* Fallback for Edge
