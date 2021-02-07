@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {  faFacebookF , faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 import '../../styles/sign_in.scss'
 
@@ -32,8 +34,12 @@ class SignIn extends Component {
                     <Link to = "/sign_up">Sign up</Link>
                   </div>
                   <hr className="my-4" />
-                  <button className="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i className="fab fa-google mr-2"></i> Sign in with Google</button>
-                  <button className="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i className="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+                  <button className="btn btn-lg btn-google btn-block text-uppercase" type="submit">
+                    <FontAwesomeIcon icon={faGoogle} className="login-icon-btn" />  Sign in with Google
+                  </button>
+                  <button className="btn btn-lg btn-facebook btn-block text-uppercase" type="submit">
+                    <FontAwesomeIcon icon={faFacebookF} className="login-icon-btn" />  Sign in with Facebook
+                  </button>
                 </form>
               </div>
             </div>
@@ -45,3 +51,8 @@ class SignIn extends Component {
 }
 
 export default SignIn;
+
+const backgroundRoot = {
+  background: "#007bff",
+  background: "linear-gradient(to right, #0062E6, #33AEFF)"
+}
