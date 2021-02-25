@@ -2,3 +2,137 @@ body, html {
   height: 100%;
   margin: 0;
 }
+
+#wrapper {
+  overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+#page-content-wrapper nav {
+  background-color: #350d36;
+  color: #FFFFFF;
+
+  #navbarSupportedContent {
+    .white-color {
+      color: #FFFFFF;
+    }
+  }
+
+  #menu-toggle {
+    :hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#sidebar-wrapper {
+  background-color: #350d36;
+
+  .list-group-item-action {
+    background-color: #350d36;
+  }
+
+  .white-color {
+    color: #FFFFFF
+  }
+
+  .light-color {
+    color: rgb(207,195,207);
+  }
+
+  .border-none {
+    border: none !important;
+  }
+
+  a.none-text-decoration {
+    text-decoration: none;
+  }
+
+  .list-group-item-action:hover {
+      background-color: #280b29 !important;
+  }
+
+  .bold-text {
+    font-weight: bold;
+  }
+
+  div.display-block {
+    display: block;
+  }
+
+  div.display-none {
+    display: none;
+  }
+
+  #toggle-workspace-menu {
+    :hover {
+      cursor: pointer;
+    }
+  }
+}
+
+#navbarSupportedContent .account-setting .user-info {
+  padding-left: 15px;
+  padding-right: 15px;
+
+  .info-email {
+    font-size: small;
+    color: darkgray;
+  }
+
+  .info-name {
+    font-weight: bold;
+  }
+
+  .info-avatar {
+    padding-bottom: 10px;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+  }
+}
+
+///////////////////////
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+}

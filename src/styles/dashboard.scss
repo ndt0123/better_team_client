@@ -1,0 +1,66 @@
+.main-body {
+  padding: 15px;
+}
+
+.total-tasks-value {
+  color: #fe9365;
+}
+
+.new-tasks-value {
+  color: #0ac282;
+}
+
+.inprogress-tasks-value {
+  color: #fe5d70;
+}
+
+.completed-tasks-value {
+  color: #01a9ac;
+}
+
+.total-tasks-footer {
+  background: linear-gradient(to right, #fe9365, #feb798);
+}
+
+.new-tasks-footer {
+  background: linear-gradient(to right, #0ac282, #0df3a3);
+}
+
+.inprogress-tasks-footer {
+  background: linear-gradient(to right, #fe5d70, #fe909d);
+}
+
+.completed-tasks-footer {
+  background: linear-gradient(to right, #01a9ac, #01dbdf);
+}
+
+.footer-task {
+  background-color: white;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.header-task {
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
+
+.box-dash-title-container {
+  h5 {
+    margin-bottom: 0;
+    color: #505458;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 1.4;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+////////////////////////
+
+.white-back-color {
+  background-color: white;
+}

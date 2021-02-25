@@ -59,7 +59,6 @@ class SignUp extends Component {
     })
     .then(response => {
       localStorage.setItem ('authentication_token', response.data.data.user.authentication_token);
-      console.log(localStorage.getItem('authentication_token'));
       this.props.history.push('/dashboard');
     })
     .catch(error => console.log(error))
