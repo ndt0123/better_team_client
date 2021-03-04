@@ -59,6 +59,20 @@
   }
 }
 
+table {
+  td {
+    a {
+      text-decoration: none !important;
+    }
+  }
+
+  td.action svg {
+    :hover {
+      cursor: pointer;
+    }
+  }
+}
+
 ////////////////////////
 
 .white-back-color {

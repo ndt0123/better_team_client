@@ -10,6 +10,14 @@
   color: #0ac282;
 }
 
+.text-yellow {
+  color: #fe9365;
+}
+
+.text-gray {
+  color: rgb(207,195,207);
+}
+
 /////////////////////
 
 .text-small {
@@ -20,6 +28,10 @@
   font-weight: bold !important;
 }
 
+.text-center {
+  text-align: center;
+}
+
 //////////////////////////
 
 .pad-l-0p {
@@ -28,6 +40,38 @@
 
 .pad-r-0p {
   padding-right: 0px !important;
+}
+
+.pad-l-3p {
+  padding-left: 3px;
+}
+
+.pad-r-3p {
+  padding-right: 3px;
+}
+
+.pad-l-5p {
+  padding-left: 5px;
+}
+
+.pad-r-5p {
+  padding-right: 5px;
+}
+
+.mar-l-3p {
+  margin-left: 3px;
+}
+
+.mar-r-3p {
+  margin-right: 3px;
+}
+
+.mar-l-5p {
+  margin-left: 5px;
+}
+
+.mar-r-5p {
+  margin-right: 5px;
 }
 
 .pad-l-15p {
@@ -82,8 +126,42 @@
   padding: 5px;
 }
 
+.pad-t-56p {
+  padding-top: 56px !important;
+}
+
+.pad-lr-15p {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
 .mar-0p {
   margin: 0px !important;
+}
+
+.mar-l-16per {
+  margin-left: 16%;
+}
+
+.mar-l-15p {
+  margin-left: 15px !important;
+}
+
+.mar-r-15p {
+  margin-right: 15px !important;
+}
+
+.mar-b-15p {
+  margin-bottom: 15px !important;
+}
+
+.mar-t-15p {
+  margin-top: 15px !important;
+}
+
+/////////////////////////////
+.wid-16per {
+  width: 16% !important;
 }
 
 /////////////////////////////
@@ -99,11 +177,6 @@
 
 .hover-cursor-pointer:hover {
   cursor: pointer;
-}
-
-.box-main-body {
-  background-color: #f3f3f3;
-  height: 100%;
 }
 
 .shadow-box-div {
@@ -127,4 +200,9 @@
 .hover-gray-back:hover {
   background-color: rgba(0,0,0,.075);
   cursor: pointer;
+}
+
+////////////////
+.position-fixed {
+  position: fixed;
 }

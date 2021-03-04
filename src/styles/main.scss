@@ -16,17 +16,13 @@ body, html {
   transition: margin .25s ease-out;
 }
 
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 1.2rem;
-}
-
 #sidebar-wrapper .list-group {
   width: 15rem;
 }
 
 #page-content-wrapper {
   min-width: 100vw;
+  min-height: 100vh;
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -34,8 +30,20 @@ body, html {
 }
 
 #page-content-wrapper nav {
-  background-color: #350d36;
+  max-height: 56px;
+  background-color: #350d36 !important;
   color: #FFFFFF;
+
+  .sidebar-heading {
+    font-size: 1.2rem;
+  
+    a {
+      color: white;
+      text-decoration: none;
+      padding: 0px;
+      font-weight: bold;
+    }
+  }
 
   #navbarSupportedContent {
     .white-color {
@@ -48,6 +56,40 @@ body, html {
       cursor: pointer;
     }
   }
+}
+
+.box-navbar {
+  margin-left: 16%;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+.box-navbar.toggled {
+  margin-left: 0;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+.box-main-body {
+  margin-left: 16%;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+  background-color: #f3f3f3b8;
+  height: 100%;
+}
+
+.box-main-body.toggled {
+  margin-left: 0;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
 }
 
 #sidebar-wrapper {
@@ -73,8 +115,8 @@ body, html {
     text-decoration: none;
   }
 
-  .list-group-item-action:hover {
-      background-color: #280b29 !important;
+  .list-group-item-action.active-hover:hover {
+    background-color: #280b29 !important;
   }
 
   .bold-text {
@@ -92,6 +134,26 @@ body, html {
   #toggle-workspace-menu {
     :hover {
       cursor: pointer;
+    }
+  }
+
+  .create-workspace-btn {
+    border: solid rgb(207,195,207) 1px;
+    border-radius: 3px;
+    padding: 5px 0px;
+
+    &:hover {
+      background-color: #01a9ac;
+      border: none;
+      cursor: pointer;
+
+      span, svg {
+        color: white;
+      }
+    }
+
+    span {
+      padding: 0px 5px;
     }
   }
 }

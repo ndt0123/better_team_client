@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleRight, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleRight, faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import {
   BrowserRouter as Router,
@@ -9,6 +9,7 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
+import { Nav, NavDropdown, Navbar, Form, FormControl, Button } from 'react-bootstrap'
 
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
@@ -18,6 +19,7 @@ import defaultAvatar from '../../images/default-avatar.jpg';
 import AccountSetting from '../account_setting/account_setting';
 import Dashboard from '../dashboard/dashboard';
 import PersonalWorksacpe from '../personal_workspace/personal_wokspace';
+import Workspace from '../workspace/workspace';
 
 class Main extends Component {
   constructor(props) {
@@ -68,18 +70,25 @@ class Main extends Component {
   render() {
     return(
       <div className={this.state.showSidebar ? "d-flex" : "d-flex toggled"} id="wrapper">
-        <div id="sidebar-wrapper">
-          <div className="sidebar-heading logo border-bottom pad-l-15p pad-r-15p">
-            <a href="/dashboard" className="white-color none-text-decoration bold-text">Better Team</a>
-          </div>
+        <div id="sidebar-wrapper" className="wid-16per position-fixed">
           <div className="list-group list-group-flush">
-            <a href="#" className="list-group-item list-group-item-action white-color border-none pad-l-15p pad-r-15p bold-text">
+
+            <a href="/dashboard" className="list-group-item list-group-item-action text-white border-none pad-l-15p pad-r-15p bold-text text-center">
+              Better Team
+            </a>
+            <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
               Dashboard
             </a>
-            <a href="#" className="list-group-item list-group-item-action white-color border-none pad-l-15p pad-r-15p bold-text">
-              Your workspace
+            <a href="/personal_workspace" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
+              Your own workspace
             </a>
-            <div id="toggle-workspace-menu" className="list-group-item list-group-item-action white-color border-none pad-l-15p pad-r-15p" onClick={this.toggleListWorkSpace}>
+            <div className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p">
+              <div className="text-center create-workspace-btn">
+                <FontAwesomeIcon icon={faPlus} className="light-color fa-xs" />
+                <span className="light-color">Add new workspace</span>
+              </div>
+            </div>
+            <div id="toggle-workspace-menu" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p active-hover" onClick={this.toggleListWorkSpace}>
               <span className="fa-pull-left pad-r-10p">
                 <FontAwesomeIcon icon={this.state.showListWorkSpace ? faAngleDown : faAngleRight} className="fal" />
               </span>
@@ -88,23 +97,23 @@ class Main extends Component {
               </span>
             </div>
             <div className={this.state.showListWorkSpace ? "display-block" : "display-none"}>
-              <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p">
+              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
                 # Team 1
               </a>
-              <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p">
+              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
                 # Team 2
               </a>
-              <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p">
+              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
                 # Team 3
               </a>
-              <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p">
+              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
                 # Team 4
               </a>
             </div>
           </div>
         </div>
         <div id="page-content-wrapper">
-          <nav className="navbar navbar-expand-lg navbar-light">
+          <Navbar className={this.state.showSidebar ? "box-navbar" : "box-navbar toggled"} bg="light" expand="lg" fixed="top">
             <div id="menu-toggle" onClick={this.toggleMenu}>
               <FontAwesomeIcon icon={faBars} className="fa-lg" />
             </div>
@@ -145,12 +154,13 @@ class Main extends Component {
                 </li>
               </ul>
             </div>
-          </nav>
-          <div className="container-fluid box-main-body pad-0p">
+          </Navbar>
+          <div className={this.state.showSidebar ? "box-main-body pad-t-56p pad-l-0p pad-r-0p" : "box-main-body pad-t-56p pad-l-0p pad-r-0p toggled"}>
             <Router>
-                <Route path='/' component={Dashboard} />
+                <Route path='/' component={Dashboard} exact />
                 <Route path='/dashboard' component={Dashboard} />
                 <Route path='/personal_workspace' component={PersonalWorksacpe} />
+                <Route path='/workspace' component={Workspace} />
             </Router>
           </div>
         </div>
