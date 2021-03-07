@@ -176,6 +176,18 @@
       &:hover {
         cursor: pointer;
       }
+
+      .dropdown {
+        .dropdown-menu {
+          width: 100px;
+          min-width: 100px;
+
+          span {
+            font-size: 14px;
+            color: #5e6772;
+          }
+        }
+      }
     }
 
     .priority {

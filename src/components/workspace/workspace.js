@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faEllipsisV, faFilter, faFolder, faPlus } from "@fortawesome/free-solid-svg-icons";
-import {ProgressBar} from 'react-bootstrap';
+import { faCommentDots, faFilter, faFolder, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import '../../styles/workspace.scss';
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
+
+import TaskList from './task-list';
 
 class Workspace extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class Workspace extends Component {
         </div>
         <div className="col-12">
           <div className="row">
-            <div className="col-4 pad-b-15p">
+            <div className="col-md-12 col-lg-4 pad-b-15p">
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>NEW TASK</span>
@@ -66,28 +67,11 @@ class Workspace extends Component {
                   <span className="pad-l-5p">Add new task</span>
                 </div>
 
-                <div className="col-12 list mar-t-15p">
-                  <div className="row pad-b-15p">
-                    <div className="float-left col-11">
-                      <span>This is title of task 1 This is title of task 1</span>
-                      <span className="completion at_risk">At risk</span>
-                    </div>
-                    <div className="float-right col-1 menu-icon">
-                      <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray" />
-                    </div>  
-                  </div>
-                  <div className="mar-b-15p">
-                    <ProgressBar variant="warning" now={25} label={`25%`} />
-                  </div>
-                  <div>
-                    <span className="assign">Nguyen Duy Tam</span>
-                    <span className="priority high float-right">High</span>
-                  </div>               
-                </div>
+                <TaskList />
               </div>
             </div>
 
-            <div className="col-4 pad-b-15p">
+            <div className="col-md-12 col-lg-4 pad-b-15p">
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>NEW TASK</span>
@@ -99,47 +83,13 @@ class Workspace extends Component {
                   <span className="pad-l-5p">Add new task</span>
                 </div>
 
-                <div className="col-12 list mar-t-15p">
-                  <div className="row pad-b-15p">
-                    <div className="float-left col-11">
-                      <span>This is title of task 1 This is title of task 1</span>
-                      <span className="completion on_track">On track</span>
-                    </div>
-                    <div className="float-right col-1 menu-icon">
-                      <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray" />
-                    </div>  
-                  </div>
-                  <div className="mar-b-15p">
-                    <ProgressBar variant="warning" now={25} label={`25%`} />
-                  </div>
-                  <div>
-                    <span className="assign">Nguyen Duy Tam</span>
-                    <span className="priority low float-right">Low</span>
-                  </div>               
-                </div>
+                <TaskList />
 
-                <div className="col-12 list mar-t-15p">
-                  <div className="row pad-b-15p">
-                    <div className="float-left col-11">
-                      <span>This is title of task 1 This is title of task 1</span>
-                      <span className="completion excellent">Excellent</span>
-                    </div>
-                    <div className="float-right col-1 menu-icon">
-                      <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray" />
-                    </div>  
-                  </div>
-                  <div className="mar-b-15p">
-                    <ProgressBar variant="warning" now={25} label={`25%`} />
-                  </div>
-                  <div>
-                    <span className="assign">Nguyen Duy Tam</span>
-                    <span className="priority normal float-right">Normal</span>
-                  </div>               
-                </div>
+                <TaskList />
               </div>
             </div>
 
-            <div className="col-4 pad-b-15p">
+            <div className="col-md-12 col-lg-4 pad-b-15p">
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>NEW TASK</span>
@@ -150,24 +100,7 @@ class Workspace extends Component {
                   <span className="pad-l-5p">Add new task</span>
                 </div>
 
-                <div className="col-12 list mar-t-15p">
-                  <div className="row pad-b-15p">
-                    <div className="float-left col-11">
-                      <span>This is title of task 1 This is title of task 1</span>
-                      <span className="completion excellent">Excellent</span>
-                    </div>
-                    <div className="float-right col-1 menu-icon">
-                      <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray" />
-                    </div>  
-                  </div>
-                  <div className="mar-b-15p">
-                    <ProgressBar variant="warning" now={25} label={`25%`} />
-                  </div>
-                  <div>
-                    <span className="assign">Nguyen Duy Tam</span>
-                    <span className="priority urgent float-right">Urgent</span>
-                  </div>               
-                </div>
+                <TaskList />
               </div>
             </div>
           </div>

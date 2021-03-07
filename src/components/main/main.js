@@ -5,11 +5,9 @@ import { faAngleDown, faAngleRight, faBars, faPlus } from "@fortawesome/free-sol
 import axios from 'axios';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
+  Route
 } from 'react-router-dom';
-import { Nav, NavDropdown, Navbar, Form, FormControl, Button } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
 
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
@@ -27,8 +25,29 @@ class Main extends Component {
     this.state = {
       showSidebar: true,
       showListWorkSpace: true,
-      showModalAccountSetting: false
+      showModalAccountSetting: false,
+      accountInfo: {}
     }
+  }
+
+  componentDidMount() {
+    this.getAccountInfo(this);
+  }
+
+  getAccountInfo(self) {
+    axios({
+      method: 'get',
+      url: myConstant.HOST + 'api/v1/account_info',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+    }).then(function (response) {
+      self.setState({
+        accountInfo: response.data.user
+      })
+    }).catch(function (error) {
+      console.log(error)
+    })
   }
 
   toggleMenu = (event) => {
@@ -58,10 +77,9 @@ class Main extends Component {
 
   onClickLogOut = (event) => {
     event.preventDefault();
-    axios.post(myConstant.HOST + "api/v1/sign_out")
+    axios.delete(myConstant.HOST + "api/v1/sign_out")
     .then(response => {
       localStorage.removeItem('authentication_token');
-      console.log(localStorage.getItem('authentication_token'));
       this.props.history.push('/sign_in');
     })
     .catch(error => console.log(error))
@@ -70,13 +88,13 @@ class Main extends Component {
   render() {
     return(
       <div className={this.state.showSidebar ? "d-flex" : "d-flex toggled"} id="wrapper">
-        <div id="sidebar-wrapper" className="wid-16per position-fixed">
+        <div id="sidebar-wrapper" className="wid-240p position-fixed">
           <div className="list-group list-group-flush">
 
             <a href="/dashboard" className="list-group-item list-group-item-action text-white border-none pad-l-15p pad-r-15p bold-text text-center">
               Better Team
             </a>
-            <a href="#" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
+            <a href="/dashboard" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
               Dashboard
             </a>
             <a href="/personal_workspace" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
@@ -142,9 +160,9 @@ class Main extends Component {
                         <img src={defaultAvatar} />
                       </div>
                       <div className="text-center">
-                        <span className="info-name">Nguyen duy tam</span>
+                        <span className="info-name">{this.state.accountInfo.first_name + " " + this.state.accountInfo.last_name}</span>
                         <br/>
-                        <span className="info-email">ndt012399@gmail.com</span>
+                        <span className="info-email">{this.state.accountInfo.email}</span>
                       </div>
                     </div>
                     <div className="dropdown-divider"></div>
@@ -165,7 +183,7 @@ class Main extends Component {
           </div>
         </div>
 
-        <AccountSetting showModal={this.state.showModalAccountSetting} closeModal={this.closeModalAccountSetting} />
+        <AccountSetting accountInfo={this.state.accountInfo} showModal={this.state.showModalAccountSetting} closeModal={this.closeModalAccountSetting} />
       </div>
     );
   }

@@ -59,7 +59,7 @@ body, html {
 }
 
 .box-navbar {
-  margin-left: 16%;
+  margin-left: 240px;
   -webkit-transition: margin .25s ease-out;
   -moz-transition: margin .25s ease-out;
   -o-transition: margin .25s ease-out;
@@ -75,7 +75,7 @@ body, html {
 }
 
 .box-main-body {
-  margin-left: 16%;
+  margin-left: 240px;
   -webkit-transition: margin .25s ease-out;
   -moz-transition: margin .25s ease-out;
   -o-transition: margin .25s ease-out;
@@ -196,5 +196,23 @@ body, html {
 
   #wrapper.toggled #sidebar-wrapper {
     margin-left: -15rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .box-main-body {
+    margin-left: 0;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+  }
+
+  .box-navbar {
+    margin-left: 0;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
   }
 }

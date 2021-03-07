@@ -1,7 +1,134 @@
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import axios from 'axios';
+
+import * as myConstant from "../../constant.js";
 
 class AccountSetting extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      first_name: '',
+      last_name: '',
+      birthday: '',
+      phone_number: '',
+      address: '',
+      university: '',
+      facebook: '',
+      sex: ''
+    }
+
+    // this.state = {
+    //   email: this.props.accountInfo.email,
+    //   first_name: this.props.accountInfo.first_name,
+    //   last_name: this.props.accountInfo.last_name,
+    //   birthday: this.props.accountInfo.birthday,
+    //   phone_number: this.props.accountInfo.phone_number,
+    //   address: this.props.accountInfo.address,
+    //   university: this.props.accountInfo.university,
+    //   facebook: this.props.accountInfo.facebook,
+    //   sex: this.props.accountInfo.sex
+    // }
+  }
+
+  // componentWillReceiveProps(nextProps) {
+  //   this.setState({
+  //     email: nextProps.accountInfo.email,
+  //     first_name: nextProps.accountInfo.first_name,
+  //     last_name: nextProps.accountInfo.last_name,
+  //     birthday: nextProps.accountInfo.birthday,
+  //     phone_number: nextProps.accountInfo.phone_number,
+  //     address: nextProps.accountInfo.address,
+  //     university: nextProps.accountInfo.university,
+  //     facebook: nextProps.accountInfo.facebook,
+  //     sex: nextProps.accountInfo.sex
+  //   })
+  // }
+
+  // componentDidMount() {
+  //   this.setState({
+  //     email: nextProps.accountInfo.email,
+  //     first_name: nextProps.accountInfo.first_name,
+  //     last_name: nextProps.accountInfo.last_name,
+  //     birthday: nextProps.accountInfo.birthday,
+  //     phone_number: nextProps.accountInfo.phone_number,
+  //     address: nextProps.accountInfo.address,
+  //     university: nextProps.accountInfo.university,
+  //     facebook: nextProps.accountInfo.facebook,
+  //     sex: nextProps.accountInfo.sex
+  //   })
+  // }
+
+  // static getDerivedStateFromProps(nextProps, prevState){
+  //   if(nextProps.accountInfo!==prevState.accountInfo){
+  //     return {
+  //       email: nextProps.accountInfo.email,
+  //       first_name: nextProps.accountInfo.first_name,
+  //       last_name: nextProps.accountInfo.last_name,
+  //       birthday: nextProps.accountInfo.birthday,
+  //       phone_number: nextProps.accountInfo.phone_number,
+  //       address: nextProps.accountInfo.address,
+  //       university: nextProps.accountInfo.university,
+  //       facebook: nextProps.accountInfo.facebook,
+  //       sex: nextProps.accountInfo.sex
+  //     };
+  //   }
+  //   return null;
+  // }
+  
+  componentWillReceiveProps(prevProps, prevState) {
+    if(prevProps.accountInfo !== this.props.accountInfo){
+      this.setState({
+        email: prevProps.accountInfo.email,
+        first_name: prevProps.accountInfo.first_name,
+        last_name: prevProps.accountInfo.last_name,
+        birthday: prevProps.accountInfo.birthday,
+        phone_number: prevProps.accountInfo.phone_number,
+        address: prevProps.accountInfo.address,
+        university: prevProps.accountInfo.university,
+        facebook: prevProps.accountInfo.facebook,
+        sex: prevProps.accountInfo.sex
+      });
+    }
+  }
+
+  clickOnSubmit = (e) => {
+    e.preventDefault();
+    var self = this;
+    axios({
+      method: 'patch',
+      url: myConstant.HOST + 'api/v1/update_account',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+      data: {
+        first_name: this.state.first_name,
+        last_name: this.state.last_name,
+        birthday: this.state.birthday,
+        phone_number: this.state.phone_number,
+        address: this.state.address,
+        university: this.state.university,
+        facebook: this.state.facebook,
+        sex: this.state.sex
+      }
+    }).then(function (response) {
+      self.setState({
+        email: response.data.user.email,
+        first_name: response.data.user.first_name,
+        last_name: response.data.user.last_name,
+        birthday: response.data.user.birthday,
+        phone_number: response.data.user.phone_number,
+        address: response.data.user.address,
+        university: response.data.user.university,
+        facebook: response.data.user.facebook,
+        sex: response.data.user.sex
+      })
+    }).catch(function (error) {
+      console.log(error)
+    })
+  }
+
   render() {
     return(
       <div>
@@ -13,36 +140,86 @@ class AccountSetting extends Component {
             <Modal.Body>
               <div className="form-group">
                 <label htmlFor="email">Email address</label>
-                <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" readOnly value="ndt012399@gmail.com" />
+                <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" readOnly value={this.state.email} />
               </div>
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="firstName">First name</label>
-                  <input type="text" className="form-control" id="firstName" placeholder="First name" required />
+                  <input type="text" className="form-control" id="firstName" placeholder="First name" value={this.state.first_name} required onChange={(e) => {
+                    this.setState({
+                      first_name: e.target.value
+                    })
+                  }} />
                 </div>
                 <div className="form-group col">
                   <label htmlFor="lastName">Last name</label>
-                  <input type="text" className="form-control" id="lastName" placeholder="Last name" required />
+                  <input type="text" className="form-control" id="lastName" placeholder="Last name" value={this.state.last_name} required onChange={(e) => {
+                    this.setState({
+                      last_name: e.target.value
+                    })
+                  }} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="birthday">Birthday</label>
-                  <input type="date" className="form-control" id="birthday" placeholder="Birthday" />
+                  <input type="date" className="form-control" id="birthday" placeholder="Birthday" value={this.state.birthday} onChange={(e) => {
+                    this.setState({
+                      birthday: e.target.value
+                    })
+                  }} />
                 </div>
                 <div className="form-group col">
                   <label htmlFor="phoneNumber">Phone number</label>
-                  <input type="tel" className="form-control" id="phoneNumber" placeholder="Phone number" pattern="[0-9]{10}" />
+                  <input type="tel" className="form-control" id="phoneNumber" placeholder="Phone number" pattern="[0-9]{10}" value={this.state.phone_number} onChange={(e) => {
+                    this.setState({
+                      phone_number: e.target.value
+                    })
+                  }} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input type="text" className="form-control" id="address" placeholder="Address" value={this.state.address} onChange={(e) => {
+                  this.setState({
+                    address: e.target.value
+                  })
+                }} />
+              </div>
+              <div className="form-row">
+                <div className="form-group col">
+                  <label htmlFor="university">University</label>
+                  <input type="text" className="form-control" id="university" placeholder="University" value={this.state.university} onChange={(e) => {
+                    this.setState({
+                      university: e.target.value
+                    })
+                  }} />
+                </div>
+                <div className="form-group col">
+                  <label htmlFor="facebook">Facebook</label>
+                  <input type="text" className="form-control" id="facebook" placeholder="Facebook" value={this.state.facebook} onChange={(e) => {
+                    this.setState({
+                      facebook: e.target.value
+                    })
+                  }} />
                 </div>
               </div>
               <div className="form-group">
                 <legend className="col-form-label pt-0">Sex</legend>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="sex" id="maleSex" value="male" />
+                  <input className="form-check-input" type="radio" name="sex" id="maleSex" value="male" checked={this.state.sex === "male"} onChange={(e) => {
+                    this.setState({
+                      sex: e.target.value
+                    })
+                  }} />
                   <label className="form-check-label" htmlFor="maleSex">Male</label>
                 </div>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="sex" id="femaleSex" value="female" />
+                  <input className="form-check-input" type="radio" name="sex" id="femaleSex" value="female" checked={this.state.sex === "female"} onChange={(e) => {
+                    this.setState({
+                      sex: e.target.value
+                    })
+                  }} />
                   <label className="form-check-label" htmlFor="femaleSex">Female</label>
                 </div>
               </div>
@@ -51,7 +228,7 @@ class AccountSetting extends Component {
               <Button variant="secondary" onClick={this.props.closeModal}>
                 Close
               </Button>
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" onClick={this.clickOnSubmit}>
                 Save Changes
               </Button>
             </Modal.Footer>
