@@ -16,66 +16,14 @@ class AccountSetting extends Component {
       address: '',
       university: '',
       facebook: '',
-      sex: ''
+      sex: '',
+      errorsMessages: '',
+      errorValidate: {
+        first_name: '',
+        last_name: ''
+      }
     }
-
-    // this.state = {
-    //   email: this.props.accountInfo.email,
-    //   first_name: this.props.accountInfo.first_name,
-    //   last_name: this.props.accountInfo.last_name,
-    //   birthday: this.props.accountInfo.birthday,
-    //   phone_number: this.props.accountInfo.phone_number,
-    //   address: this.props.accountInfo.address,
-    //   university: this.props.accountInfo.university,
-    //   facebook: this.props.accountInfo.facebook,
-    //   sex: this.props.accountInfo.sex
-    // }
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({
-  //     email: nextProps.accountInfo.email,
-  //     first_name: nextProps.accountInfo.first_name,
-  //     last_name: nextProps.accountInfo.last_name,
-  //     birthday: nextProps.accountInfo.birthday,
-  //     phone_number: nextProps.accountInfo.phone_number,
-  //     address: nextProps.accountInfo.address,
-  //     university: nextProps.accountInfo.university,
-  //     facebook: nextProps.accountInfo.facebook,
-  //     sex: nextProps.accountInfo.sex
-  //   })
-  // }
-
-  // componentDidMount() {
-  //   this.setState({
-  //     email: nextProps.accountInfo.email,
-  //     first_name: nextProps.accountInfo.first_name,
-  //     last_name: nextProps.accountInfo.last_name,
-  //     birthday: nextProps.accountInfo.birthday,
-  //     phone_number: nextProps.accountInfo.phone_number,
-  //     address: nextProps.accountInfo.address,
-  //     university: nextProps.accountInfo.university,
-  //     facebook: nextProps.accountInfo.facebook,
-  //     sex: nextProps.accountInfo.sex
-  //   })
-  // }
-
-  // static getDerivedStateFromProps(nextProps, prevState){
-  //   if(nextProps.accountInfo!==prevState.accountInfo){
-  //     return {
-  //       email: nextProps.accountInfo.email,
-  //       first_name: nextProps.accountInfo.first_name,
-  //       last_name: nextProps.accountInfo.last_name,
-  //       birthday: nextProps.accountInfo.birthday,
-  //       phone_number: nextProps.accountInfo.phone_number,
-  //       address: nextProps.accountInfo.address,
-  //       university: nextProps.accountInfo.university,
-  //       facebook: nextProps.accountInfo.facebook,
-  //       sex: nextProps.accountInfo.sex
-  //     };
-  //   }
-  //   return null;
-  // }
   
   componentWillReceiveProps(prevProps, prevState) {
     if(prevProps.accountInfo !== this.props.accountInfo){
@@ -95,49 +43,110 @@ class AccountSetting extends Component {
 
   clickOnSubmit = (e) => {
     e.preventDefault();
-    var self = this;
-    axios({
-      method: 'patch',
-      url: myConstant.HOST + 'api/v1/update_account',
-      headers: {
-        'auth-token': localStorage.getItem('authentication_token')
-      },
-      data: {
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
-        birthday: this.state.birthday,
-        phone_number: this.state.phone_number,
-        address: this.state.address,
-        university: this.state.university,
-        facebook: this.state.facebook,
-        sex: this.state.sex
-      }
-    }).then(function (response) {
-      self.setState({
-        email: response.data.user.email,
-        first_name: response.data.user.first_name,
-        last_name: response.data.user.last_name,
-        birthday: response.data.user.birthday,
-        phone_number: response.data.user.phone_number,
-        address: response.data.user.address,
-        university: response.data.user.university,
-        facebook: response.data.user.facebook,
-        sex: response.data.user.sex
+    if(this.state.errorValidate.first_name === '' && this.state.errorValidate.last_name === '') {
+      axios({
+        method: 'patch',
+        url: myConstant.HOST + 'api/v1/update_account',
+        headers: {
+          'auth-token': localStorage.getItem('authentication_token')
+        },
+        data: {
+          first_name: this.state.first_name,
+          last_name: this.state.last_name,
+          birthday: this.state.birthday,
+          phone_number: this.state.phone_number,
+          address: this.state.address,
+          university: this.state.university,
+          facebook: this.state.facebook,
+          sex: this.state.sex
+        }
+      }).then((response) => {
+        if(response.data.is_success) {
+          this.setState({
+            email: response.data.user.email,
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            birthday: response.data.user.birthday,
+            phone_number: response.data.user.phone_number,
+            address: response.data.user.address,
+            university: response.data.user.university,
+            facebook: response.data.user.facebook,
+            sex: response.data.user.sex,
+            errorsMessages: ''
+          })
+          let firstName = response.data.user.first_name;
+          let lastName = response.data.user.last_name;
+          this.props.updateNameAndEmail(firstName + ' ' + lastName);
+          this.props.closeModal();
+        } else {
+          this.setState({
+            errorsMessages: response.data.errors
+          })
+        }
+      }).catch(function (error) {
+        console.log(error)
       })
-    }).catch(function (error) {
-      console.log(error)
-    })
+    }
+  }
+  
+  onChangeFirstName = (e) => {
+    let first_name = e.target.value.trim();
+    if(first_name === '') {
+      this.setState({
+        first_name: first_name,
+        errorValidate: {
+          first_name: 'First name can not be blank!',
+          last_name: this.state.errorValidate.last_name
+        }
+      })
+    } else {
+      this.setState({
+        first_name: first_name,
+        errorValidate: {
+          first_name: '',
+          last_name: this.state.errorValidate.last_name
+        }
+      })
+    }
+  }
+
+  onChangeLastName = (e) => {
+    let last_name = e.target.value.trim();
+    if(last_name === '') {
+      this.setState({
+        last_name: last_name,
+        errorValidate: {
+          first_name: this.state.errorValidate.first_name,
+          last_name: 'Last name can not be blank!'
+        }
+      })
+    } else {
+      this.setState({
+        last_name: last_name,
+        errorValidate: {
+          first_name: this.state.errorValidate.first_name,
+          last_name: ''
+        }
+      })
+    }
   }
 
   render() {
     return(
       <div>
-        <Modal show={this.props.showModal} onHide={this.props.closeModal} size="lg" aria-labelledby="example-modal-sizes-title-lg">
+        <Modal show={this.props.showModal}
+          onHide={this.props.closeModal} 
+          size="lg" 
+          aria-labelledby="example-modal-sizes-title-lg"
+        >
           <Modal.Header closeButton>
             <Modal.Title>Account setting</Modal.Title>
           </Modal.Header>
           <form>
             <Modal.Body>
+              <div>
+                <img src={require('../../images/default-avatar.jpg')} alt="Avatar" />
+              </div>
               <div className="form-group">
                 <label htmlFor="email">Email address</label>
                 <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" readOnly value={this.state.email} />
@@ -145,19 +154,13 @@ class AccountSetting extends Component {
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="firstName">First name</label>
-                  <input type="text" className="form-control" id="firstName" placeholder="First name" value={this.state.first_name} required onChange={(e) => {
-                    this.setState({
-                      first_name: e.target.value
-                    })
-                  }} />
+                  <input type="text" className="form-control" id="firstName" placeholder="First name" value={this.state.first_name} required onChange={this.onChangeFirstName} />
+                  <span className="error-input-validate">{this.state.errorValidate.first_name}</span>
                 </div>
                 <div className="form-group col">
                   <label htmlFor="lastName">Last name</label>
-                  <input type="text" className="form-control" id="lastName" placeholder="Last name" value={this.state.last_name} required onChange={(e) => {
-                    this.setState({
-                      last_name: e.target.value
-                    })
-                  }} />
+                  <input type="text" className="form-control" id="lastName" placeholder="Last name" value={this.state.last_name} required onChange={this.onChangeLastName} />
+                  <span className="error-input-validate">{this.state.errorValidate.last_name}</span>
                 </div>
               </div>
               <div className="form-row">
@@ -223,13 +226,16 @@ class AccountSetting extends Component {
                   <label className="form-check-label" htmlFor="femaleSex">Female</label>
                 </div>
               </div>
+              <div>
+                <span className="error-input-validate">{this.state.errorsMessages}</span>
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={this.props.closeModal}>
                 Close
               </Button>
               <Button variant="primary" type="submit" onClick={this.clickOnSubmit}>
-                Save Changes
+                Save
               </Button>
             </Modal.Footer>
           </form>

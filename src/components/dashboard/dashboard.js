@@ -7,12 +7,12 @@ import '../../styles/dashboard.scss';
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
 
-import TaskEdittingModal from './task_editting_modal';
-import TaskCommentModal from './task_comment_modal';
-import DeleteTaskModal from './delete_task_modal';
-import NewWorkspaceModal from './new_workspace_modal';
-import WorkspaceDetailModal from './workspace_detail_modal';
-import JoinWorkspaceConfirmModal from './join_workspace_confirm_modal';
+import TaskEdittingModal from '../modals/task_editting_modal';
+import TaskCommentModal from '../modals/task_comment_modal';
+import DeleteTaskModal from '../modals/delete_task_modal';
+import NewWorkspaceModal from '../modals/new_workspace_modal';
+import WorkspaceDetailModal from '../modals/workspace_detail_modal';
+import JoinWorkspaceConfirmModal from '../modals/join_workspace_confirm_modal';
 
 class Dashboard extends Component {
   constructor(props) {

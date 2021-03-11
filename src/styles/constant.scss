@@ -18,10 +18,18 @@
   color: rgb(207,195,207);
 }
 
+.text-dark-gray {
+  color: rgba(var(--sk_foreground_max_solid,97,96,97),1);
+}
+
 /////////////////////
 
 .text-small {
   font-size: small !important;
+}
+
+.text-size-15p {
+  font-size: 15px !important;
 }
 
 .text-bold {
@@ -209,4 +217,11 @@
 ////////////////
 .position-fixed {
   position: fixed;
+}
+
+
+//////////////////////////
+.error-input-validate {
+  color: red;
+  font-size: 14px;
 }

@@ -93,10 +93,10 @@ body, html {
 }
 
 #sidebar-wrapper {
-  background-color: #350d36;
+  background-color: #5e6772;
 
   .list-group-item-action {
-    background-color: #350d36;
+    background-color: #5e6772;
   }
 
   .white-color {
@@ -115,8 +115,26 @@ body, html {
     text-decoration: none;
   }
 
-  .list-group-item-action.active-hover:hover {
-    background-color: #280b29 !important;
+  .list-group-item-action.active-hover {
+    clear: both;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    svg {
+      margin-right: 10px;
+    }
+
+    &:hover {
+      background-color: #04b5ac !important;
+      color: white;
+      font-weight: bold;
+
+      svg {
+        color: white;
+      }
+    }
   }
 
   .bold-text {
@@ -154,6 +172,19 @@ body, html {
 
     span {
       padding: 0px 5px;
+    }
+  }
+
+  #box-list-workspaces {
+    overflow-y: scroll;
+    height: 350px;
+
+    // Hide scroolbar
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }

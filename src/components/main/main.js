@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleRight, faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleRight, faBars, faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import {
   BrowserRouter as Router,
@@ -18,35 +18,70 @@ import AccountSetting from '../account_setting/account_setting';
 import Dashboard from '../dashboard/dashboard';
 import PersonalWorksacpe from '../personal_workspace/personal_wokspace';
 import Workspace from '../workspace/workspace';
+import NewWorkspaceModal from '../modals/new_workspace_modal';
 
 class Main extends Component {
   constructor(props) {
     super(props);
+    this.getListWorkspaces = this.getListWorkspaces.bind(this);
+    this.closeModalNewWorkspace = this.closeModalNewWorkspace.bind(this);
+    this.closeModalAccountSetting = this.closeModalAccountSetting.bind(this);
+    this.updateNameAndEmail = this.updateNameAndEmail.bind(this);
+
     this.state = {
       showSidebar: true,
       showListWorkSpace: true,
       showModalAccountSetting: false,
-      accountInfo: {}
+      showNewWorkspaceModal: false,
+      workspaces: [],
+      accountInfo: {},
+      fullName: ''
     }
   }
 
   componentDidMount() {
-    this.getAccountInfo(this);
+    this.getAccountInfo();
+    this.getListWorkspaces();
   }
 
-  getAccountInfo(self) {
+  getAccountInfo() {
     axios({
       method: 'get',
       url: myConstant.HOST + 'api/v1/account_info',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
-    }).then(function (response) {
-      self.setState({
-        accountInfo: response.data.user
+    }).then((response) => {
+      this.setState({
+        accountInfo: response.data.user,
+        fullName: response.data.user.first_name + ' ' + response.data.user.last_name,
+        email: response.data.user.email
       })
     }).catch(function (error) {
       console.log(error)
+    })
+  }
+
+  getListWorkspaces() {
+    axios({
+      method: 'get',
+      url: myConstant.HOST + 'api/v1/user_list_workspace',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      }
+    }).then((response) => {
+      this.setState({
+        workspaces: response.data.workspaces
+      })
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  updateNameAndEmail = (fullName) => {
+    console.log('run hererrrr')
+    this.setState({
+      fullName: fullName
     })
   }
 
@@ -70,8 +105,15 @@ class Main extends Component {
   }
 
   closeModalAccountSetting = () => {
+    console.log('run here')
     this.setState({
       showModalAccountSetting: false
+    })
+  }
+
+  closeModalNewWorkspace = () => {
+    this.setState({
+      showNewWorkspaceModal: false
     })
   }
 
@@ -86,6 +128,17 @@ class Main extends Component {
   }
 
   render() {
+    const Workspaces = ({workspaces}) => (
+      <div>
+        {workspaces.map(workspace => (
+          <a href={"/workspace/" + workspace.id} className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover" key={workspace.id}>
+            <FontAwesomeIcon icon={faHashtag} className="light-color fa-bold" />
+            {workspace.title}
+          </a>
+        ))}
+      </div>
+    );
+
     return(
       <div className={this.state.showSidebar ? "d-flex" : "d-flex toggled"} id="wrapper">
         <div id="sidebar-wrapper" className="wid-240p position-fixed">
@@ -100,7 +153,11 @@ class Main extends Component {
             <a href="/personal_workspace" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
               Your own workspace
             </a>
-            <div className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p">
+            <div className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p" onClick={() => {
+              this.setState({
+                showNewWorkspaceModal: true
+              })
+            }}>
               <div className="text-center create-workspace-btn">
                 <FontAwesomeIcon icon={faPlus} className="light-color fa-xs" />
                 <span className="light-color">Add new workspace</span>
@@ -114,19 +171,8 @@ class Main extends Component {
                 Workspaces
               </span>
             </div>
-            <div className={this.state.showListWorkSpace ? "display-block" : "display-none"}>
-              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
-                # Team 1
-              </a>
-              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
-                # Team 2
-              </a>
-              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
-                # Team 3
-              </a>
-              <a href="/workspace" className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover">
-                # Team 4
-              </a>
+            <div className={this.state.showListWorkSpace ? "display-block" : "display-none"} id="box-list-workspaces">
+              <Workspaces workspaces={this.state.workspaces} />
             </div>
           </div>
         </div>
@@ -160,9 +206,9 @@ class Main extends Component {
                         <img src={defaultAvatar} />
                       </div>
                       <div className="text-center">
-                        <span className="info-name">{this.state.accountInfo.first_name + " " + this.state.accountInfo.last_name}</span>
+                        <span className="info-name">{this.state.fullName}</span>
                         <br/>
-                        <span className="info-email">{this.state.accountInfo.email}</span>
+                        <span className="info-email">{this.state.email}</span>
                       </div>
                     </div>
                     <div className="dropdown-divider"></div>
@@ -183,7 +229,15 @@ class Main extends Component {
           </div>
         </div>
 
-        <AccountSetting accountInfo={this.state.accountInfo} showModal={this.state.showModalAccountSetting} closeModal={this.closeModalAccountSetting} />
+        <AccountSetting updateNameAndEmail={this.updateNameAndEmail}
+          accountInfo={this.state.accountInfo} 
+          showModal={this.state.showModalAccountSetting}
+          closeModal={this.closeModalAccountSetting}
+        />
+        <NewWorkspaceModal showModal={this.state.showNewWorkspaceModal}
+          closeModal={this.closeModalNewWorkspace}
+          updateListWorkspaces={this.getListWorkspaces}
+        />
       </div>
     );
   }

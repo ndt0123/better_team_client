@@ -19,7 +19,6 @@ function isAuthenticated() {
 }
 
 function App() {
-  console.log(isAuthenticated());
   const PrivateRoute = ({ ...props }) =>
     isAuthenticated() ? <Route { ...props } /> : <Redirect to="/sign_in" />
 
