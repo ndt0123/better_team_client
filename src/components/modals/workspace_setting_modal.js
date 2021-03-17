@@ -6,7 +6,7 @@ import * as myConstant from '../../constant';
 
 const MAX_TITLE_LENGTH = 40;
 
-class NewWorkspaceModal extends Component {
+class WorkspaceSettingModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,6 +16,15 @@ class NewWorkspaceModal extends Component {
       is_private: {value: false, error: ''},
       code: {value: '', error: ''}
     }
+  }
+
+  componentWillReceiveProps(prevProps, prevState) {
+    this.setState({
+      title: {value: this.props.workspaceInfo.title, error: ''},
+      description: {value: this.props.workspaceInfo.description, error: ''},
+      is_private: {value: this.props.workspaceInfo.is_private, error: ''},
+      code: {value: this.props.workspaceInfo.code, error: ''}
+    })
   }
 
   onChangeTitle = (e) => {
@@ -92,12 +101,13 @@ class NewWorkspaceModal extends Component {
     let description = this.state.description.value.trim();
     let code = this.state.code.value;
     let is_private = this.state.is_private.value;
+    let workspace_id = this.props.workspaceInfo.id;
 
     if (title.length > 0 && title.length <= MAX_TITLE_LENGTH && description.length > 0
       && (!is_private || (is_private && code.length > 4 && code.length < 11))) {
       axios({
-        method: 'post',
-        url: myConstant.HOST + 'api/v1/workspace',
+        method: 'patch',
+        url: myConstant.HOST + 'api/v1/workspace/' + workspace_id,
         headers: {
           'auth-token': localStorage.getItem('authentication_token')
         },
@@ -109,11 +119,7 @@ class NewWorkspaceModal extends Component {
         }
       }).then((response) => {
         if (response.data.is_success) {
-          this.setState({
-            title: {value: '', error: ''},
-            description: {value: '', error: ''}
-          })
-          this.props.updateListWorkspaces();
+          this.props.updateWorkspaceInfo(response.data.workspace);
           this.props.closeModal();
         } else {
           this.setState({
@@ -136,7 +142,7 @@ class NewWorkspaceModal extends Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title className="text-bold">New workspace</Modal.Title>
+            <Modal.Title className="text-bold">Workspace Setting</Modal.Title>
           </Modal.Header>
           <form>
             <Modal.Body>
@@ -191,7 +197,7 @@ class NewWorkspaceModal extends Component {
                 Close
               </Button>
               <Button variant="primary" type="submit" onClick={this.clickOnSubmitBtn}>
-                Create
+                Save
               </Button>
             </Modal.Footer>
           </form>
@@ -201,4 +207,4 @@ class NewWorkspaceModal extends Component {
   }
 }
 
-export default NewWorkspaceModal;
+export default WorkspaceSettingModal;

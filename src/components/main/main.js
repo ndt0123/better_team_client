@@ -105,7 +105,6 @@ class Main extends Component {
   }
 
   closeModalAccountSetting = () => {
-    console.log('run here')
     this.setState({
       showModalAccountSetting: false
     })
@@ -224,7 +223,7 @@ class Main extends Component {
                 <Route path='/' component={Dashboard} exact />
                 <Route path='/dashboard' component={Dashboard} />
                 <Route path='/personal_workspace' component={PersonalWorksacpe} />
-                <Route path='/workspace' component={Workspace} />
+                <Route path='/workspace/:id' component={Workspace} />
             </Router>
           </div>
         </div>
