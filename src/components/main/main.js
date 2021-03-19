@@ -202,7 +202,7 @@ class Main extends Component {
                   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <div className="user-info">
                       <div className="text-center info-avatar">
-                        <img src={defaultAvatar} />
+                        <img src={defaultAvatar} alt="Avatar" />
                       </div>
                       <div className="text-center">
                         <span className="info-name">{this.state.fullName}</span>

@@ -240,3 +240,74 @@
     }
   }
 }
+
+.workspace-setting-header {
+  padding-bottom: 0 !important;
+
+  .box-workspace-setting-header-option {
+    display: flex;
+    margin-top: 10px;
+
+    :first-child {
+      margin-right: 10px;
+    }
+
+    .workspace-setting-header-option {
+      padding: 5px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .active {
+      color: #04b5ac;
+      border-bottom: 1px solid #04b5ac;
+    }
+
+    .inactive {
+      color: #67696c;
+      border: none;
+    }
+  }
+}
+
+.list-members {
+  .member {
+    padding: 10px 16px;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.075);
+
+      .full-name {
+        color: #04b5ac;
+      }
+    }
+
+    .full-name {
+      font-weight: bold;
+    }
+
+    .avatar {
+      img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+      }
+    }
+
+    .action {
+      margin: auto 0;
+
+      .remove {
+        &:hover {
+          color: #fe9365;
+        }
+      }
+    }
+  }
+}

@@ -16,42 +16,13 @@ class Workspace extends Component {
   constructor(props) {
     super(props);
     this.closeSettingWorkspace = this.closeSettingWorkspace.bind(this);
-    this.getWorkspaceInfo = this.getWorkspaceInfo.bind(this);
-    this.updateWorkspaceInfo = this.updateWorkspaceInfo.bind(this);
     this.state = {
       isFocusSearchInput: false,
-      showSettingWorkspace: false,
-      workspaceInfo: {}
+      showSettingWorkspace: false
     }
   }
 
   componentDidMount() {
-    this.getWorkspaceInfo();
-  }
-
-  getWorkspaceInfo() {
-    axios({
-      method: 'get',
-      url: myConstant.HOST + 'api/v1/workspace/' + this.props.match.params.id,
-      headers: {
-        'auth-token': localStorage.getItem('authentication_token')
-      },
-      data: {}
-    }).then((response) => {
-      if (response.data.is_success) {
-        this.setState({
-          workspaceInfo: response.data.workspace
-        })
-      }
-    }).catch((error) => {
-      console.log(error);
-    })
-  }
-
-  updateWorkspaceInfo(workspaceInfo) {
-    this.setState({
-      workspaceInfo: workspaceInfo
-    })
   }
 
   closeSettingWorkspace = () => {
@@ -65,34 +36,35 @@ class Workspace extends Component {
       <div className="row main-body">
         <div className="col-12 pad-b-15p">
           <div className="row pad-lr-15p header-btn">
-              <div className="new-task-btn mar-r-15p">
-                <FontAwesomeIcon icon={faPlus} className="fa-xs" />
-                <span className="pad-l-5p">New task</span>
-              </div>
-              <div className={this.state.isFocusSearchInput ? "search-input focus-input" : "search-input blur-input"}>
-                <FontAwesomeIcon icon={faFilter} className="fa-xs" />
-                <input type="text" placeholder="Type to filter task" className="mar-l-5p" 
-                  onFocus={() => {
-                    this.setState({
-                      isFocusSearchInput: true
-                    })
-                  }}
-                  onBlur={() => {
-                    this.setState({
-                      isFocusSearchInput: false
-                    })
-                  }}
-                />
-              </div>
-              <div className="btn float-right">
+            <div className="new-task-btn mar-r-15p">
+              <FontAwesomeIcon icon={faPlus} className="fa-xs" />
+              <span className="pad-l-5p">New task</span>
+            </div>
+            <div className={this.state.isFocusSearchInput ? "search-input focus-input" : "search-input blur-input"}>
+              <FontAwesomeIcon icon={faFilter} className="fa-xs" />
+              <input type="text" placeholder="Type to filter task" className="mar-l-5p" 
+                onFocus={() => {
+                  this.setState({
+                    isFocusSearchInput: true
+                  })
+                }}
+                onBlur={() => {
+                  this.setState({
+                    isFocusSearchInput: false
+                  })
+                }}
+              />
+            </div>
+            <div className="ml-auto row right-option">
+              <div className="btn">
                 <FontAwesomeIcon icon={faFolder} className="fa-x1" />
                 <span className="pad-l-5p">Description</span>
               </div>
-              <div className="btn float-right">
+              <div className="btn">
                 <FontAwesomeIcon icon={faCommentDots} className="fa-x1" />
                 <span className="pad-l-5p">Message</span>
               </div>
-              <div className="float-right btn">
+              <div className="btn mar-r-15p">
                 <div className="dropdown">
                   <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray dropdown-toggle"   id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -106,6 +78,7 @@ class Workspace extends Component {
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
         <div className="col-12">
@@ -163,8 +136,7 @@ class Workspace extends Component {
 
         <WorkspaceSettingModal showModal={this.state.showSettingWorkspace}
           closeModal={this.closeSettingWorkspace}
-          workspaceInfo={this.state.workspaceInfo}
-          updateWorkspaceInfo={this.updateWorkspaceInfo}
+          workspaceId={this.props.match.params.id}
         />
       </div>
     );

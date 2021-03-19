@@ -1,29 +1,74 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
+import ReactTooltip from "react-tooltip";
 
 import * as myConstant from '../../constant';
+import defaultAvatar from '../../images/default-avatar.jpg';
 
 const MAX_TITLE_LENGTH = 40;
 
 class WorkspaceSettingModal extends Component {
   constructor(props) {
     super(props);
+    this.onClickRemoveMember = this.onClickRemoveMember.bind(this)
     this.state = {
       errorValidateServer: '',
       title: {value: '', error: ''},
       description: {value: '', error: ''},
       is_private: {value: false, error: ''},
-      code: {value: '', error: ''}
+      code: {value: '', error: ''},
+      isActiveSetting: true,
+      allMembers: [],
+      errorRemoveMember: ''
     }
   }
 
-  componentWillReceiveProps(prevProps, prevState) {
-    this.setState({
-      title: {value: this.props.workspaceInfo.title, error: ''},
-      description: {value: this.props.workspaceInfo.description, error: ''},
-      is_private: {value: this.props.workspaceInfo.is_private, error: ''},
-      code: {value: this.props.workspaceInfo.code, error: ''}
+  componentDidMount() {
+    this.getWorkspaceInfo();
+    this.getAllMembers();
+  }
+
+  getAllMembers() {
+    let workspaceId = this.props.workspaceId;
+    axios({
+      method: 'get',
+      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      }
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.setState({
+          allMembers: response.data.members
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  getWorkspaceInfo() {
+    axios({
+      method: 'get',
+      url: myConstant.HOST + 'api/v1/workspace/' + this.props.workspaceId,
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+      data: {}
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.setState({
+          title: {value: response.data.workspace.title, error: ''},
+          description: {value: response.data.workspace.description, error: ''},
+          is_private: {value: response.data.workspace.is_private, error: ''},
+          code: {value: response.data.workspace.code, error: ''}
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
     })
   }
 
@@ -95,19 +140,45 @@ class WorkspaceSettingModal extends Component {
     })
   }
 
+  onClickRemoveMember = (member_id) => {
+    let workspaceId = this.props.workspaceId;
+    axios({
+      method: 'post',
+      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/remove_members',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+      data: {
+        user_ids: [member_id]
+      }
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.setState({
+          allMembers: response.data.members
+        })
+      } else {
+        this.setState({
+          errorRemoveMember: response.data.message
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
   clickOnSubmitBtn = (e) => {
     e.preventDefault();
     let title = this.state.title.value.trim();
     let description = this.state.description.value.trim();
-    let code = this.state.code.value;
+    let code = this.state.code.value == null ? '' : this.state.code.value;
     let is_private = this.state.is_private.value;
-    let workspace_id = this.props.workspaceInfo.id;
+    let workspaceId = this.props.workspaceId;
 
     if (title.length > 0 && title.length <= MAX_TITLE_LENGTH && description.length > 0
       && (!is_private || (is_private && code.length > 4 && code.length < 11))) {
       axios({
         method: 'patch',
-        url: myConstant.HOST + 'api/v1/workspace/' + workspace_id,
+        url: myConstant.HOST + 'api/v1/workspace/' + workspaceId,
         headers: {
           'auth-token': localStorage.getItem('authentication_token')
         },
@@ -119,7 +190,6 @@ class WorkspaceSettingModal extends Component {
         }
       }).then((response) => {
         if (response.data.is_success) {
-          this.props.updateWorkspaceInfo(response.data.workspace);
           this.props.closeModal();
         } else {
           this.setState({
@@ -133,6 +203,34 @@ class WorkspaceSettingModal extends Component {
   }
 
   render() {
+    const ListMembers = ({allMembers}) => (
+      <div className="list-members">
+        {allMembers.map((member, index) => (
+          <div key={index} className="member row clearfix">
+            <div className="avatar">
+              <img src={defaultAvatar} alt="Avatar" className="rounded-circle" />
+            </div>
+            <div>
+              <div className="full-name">
+                <span>{member.first_name} </span>
+                <span>{member.last_name}</span>
+              </div>
+              <div className="email text-dark-gray text-size-15p">{member.email}</div>
+            </div>
+            <div className="ml-auto action">
+              <FontAwesomeIcon icon={faUserSlash} data-tip data-for="removeMemberTip" className="fa-sm remove" onClick={() => {
+                this.onClickRemoveMember(member.id)
+              }}/>
+            </div>
+          </div>
+        ))}
+
+        <ReactTooltip id="removeMemberTip" place="bottom" effect="solid">
+          Remove member
+        </ReactTooltip>
+      </div>
+    );
+
     return(
       <div>
         <Modal show={this.props.showModal}
@@ -141,65 +239,98 @@ class WorkspaceSettingModal extends Component {
           aria-labelledby="example-modal-sizes-title-lg" 
           centered
         >
-          <Modal.Header closeButton>
-            <Modal.Title className="text-bold">Workspace Setting</Modal.Title>
+          <Modal.Header closeButton className="workspace-setting-header">
+            <Modal.Title className="text-bold">
+              Workspace Setting
+
+              <div className="box-workspace-setting-header-option">
+                <div className={this.state.isActiveSetting ? "workspace-setting-header-option active" : "workspace-setting-header-option inactive"}
+                  onClick={() => {
+                    this.setState({
+                      isActiveSetting: true
+                    })
+                  }}>
+                  Information
+                </div>
+                <div className={!this.state.isActiveSetting ? "workspace-setting-header-option active" : "workspace-setting-header-option inactive"}
+                  onClick={() => {
+                    this.setState({
+                      isActiveSetting: false
+                    })
+                  }}>
+                  Members
+                </div>
+              </div>
+            </Modal.Title>
           </Modal.Header>
           <form>
             <Modal.Body>
-              <span className="text-dark-gray text-size-15p">Workspaces are where your team communicates. They’re best when organized around a topic — #math, for example.</span>
-              <div className="form-group mar-t-15p">
-                <label htmlFor="title" className="text-bold">Title</label>
-                <input type="text" className="form-control" id="title" placeholder="Workspace's title goes here" 
-                  value={this.state.title.value}
-                  onChange={this.onChangeTitle}
-                />
-                <span className="error-input-validate">{this.state.title.error}</span>
+              <div className={this.state.isActiveSetting ? "display-block" : "display-none"}>
+                <span className="text-dark-gray text-size-15p">Workspaces are where your team communicates. They’re best when organized around a topic — #math, for example.</span>
+                <div className="form-group mar-t-15p">
+                  <label htmlFor="title" className="text-bold">Title</label>
+                  <input type="text" className="form-control" id="title" placeholder="Workspace's title goes here" 
+                    value={this.state.title.value}
+                    onChange={this.onChangeTitle}
+                  />
+                  <span className="error-input-validate">{this.state.title.error}</span>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="description" className="text-bold">Description</label>
+                  <input type="text" className="form-control" id="description"  placeholder="Type something to describe your workspace" 
+                    value={this.state.description.value} 
+                    onChange={this.onChangeDescription}
+                  />
+                  <span className="text-dark-gray text-size-15p">What’s this workspace about?</span>
+                  <br />
+                  <span className="error-input-validate">{this.state.description.error}</span>
+                </div>
+                <div className="form-group custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="is-private"
+                    checked={this.state.is_private.value}
+                    onChange={this.onChangeIsPrivate}
+                  />
+                  <label className="custom-control-label" htmlFor="is-private">
+                    Set workspace to private
+                  </label>
+                </div>
+                <div className={this.state.is_private.value ? "form-group display-block" : "form-group display-none"}>
+                  <label htmlFor="code" className="text-bold">Workspace's code</label>
+                  <input type="text" className="form-control" id="code" 
+                    placeholder="Workspace's code"
+                    value={this.state.code.value}
+                    onChange={this.onChangeCode}
+                  />
+                  <span className="text-dark-gray text-size-15p">Input your workspace's code so other users can join to workspace by this code.</span>
+                  <br/>
+                  <span className="error-input-validate">{this.state.code.error}</span>
+                </div>
+                <div className="form-group">
+                  <span className="error-input-validate">{this.state.errorValidateServer}</span>
+                </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="description" className="text-bold">Description</label>
-                <input type="text" className="form-control" id="description"  placeholder="Type something to describe your workspace" 
-                  value={this.state.description.value} 
-                  onChange={this.onChangeDescription}
-                />
-                <span className="text-dark-gray text-size-15p">What’s this workspace about?</span>
-                <br />
-                <span className="error-input-validate">{this.state.description.error}</span>
-              </div>
-              <div className="form-group custom-control custom-switch">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="is-private"
-                  checked={this.state.is_private.value}
-                  onChange={this.onChangeIsPrivate}
-                />
-                <label className="custom-control-label" htmlFor="is-private">
-                  Set workspace to private
-                </label>
-              </div>
-              <div className={this.state.is_private.value ? "form-group display-block" : "form-group display-none"}>
-                <label htmlFor="code" className="text-bold">Workspace's code</label>
-                <input type="text" className="form-control" id="code" 
-                  placeholder="Workspace's code"
-                  value={this.state.code.value}
-                  onChange={this.onChangeCode}
-                />
-                <span className="text-dark-gray text-size-15p">Input your workspace's code so other users can join to workspace by this code.</span>
-                <br/>
-                <span className="error-input-validate">{this.state.code.error}</span>
-              </div>
-              <div className="form-group">
-                <span className="error-input-validate">{this.state.errorValidateServer}</span>
+
+              <div className={this.state.isActiveSetting ? "display-none" : "display-block"}>
+                <div className="text-dark-gray text-center">
+                  You and {this.state.allMembers.length} other members
+                </div>
+                <ListMembers allMembers={this.state.allMembers} />
+                <span className="error-input-validate">{this.state.errorRemoveMember}</span>
               </div>
             </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={this.props.closeModal}>
-                Close
-              </Button>
-              <Button variant="primary" type="submit" onClick={this.clickOnSubmitBtn}>
-                Save
-              </Button>
-            </Modal.Footer>
+            <div className={this.state.isActiveSetting ? "display-block" : "display-none"}>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.props.closeModal}>
+                  Close
+                </Button>
+                <Button variant="primary" type="submit" onClick={this.clickOnSubmitBtn}>
+                  Save
+                </Button>
+              </Modal.Footer>
+            </div>
           </form>
         </Modal>
       </div>
