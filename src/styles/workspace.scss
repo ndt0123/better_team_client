@@ -276,6 +276,8 @@
 }
 
 .list-members {
+  padding: 0 16px;
+
   .member {
     padding: 10px 16px;
 
@@ -290,6 +292,11 @@
 
     .full-name {
       font-weight: bold;
+
+      .role {
+        color: rgba(var(--sk_foreground_max_solid,97,96,97),1);
+        font-weight: normal;
+      }
     }
 
     .avatar {
@@ -306,6 +313,85 @@
       .remove {
         &:hover {
           color: #fe9365;
+        }
+      }
+    }
+  }
+}
+
+.workspace-setting {
+  .member-setting {
+    .search-user-input {
+      text-align: center;
+
+      input{
+        background-color: transparent;
+        color: #888c94;
+        border-radius: 5px;
+        padding: 3px 10px;
+    
+        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+          font-size: 13px;
+          font-style: italic;
+        }
+        &::-moz-placeholder { /* Firefox 19+ */
+          font-size: 13px;
+          font-style: italic;
+        }
+        &:-ms-input-placeholder { /* IE 10+ */
+          font-size: 13px;
+          font-style: italic;
+        }
+        &:-moz-placeholder { /* Firefox 18- */
+          font-size: 13px;
+          font-style: italic;
+        }
+    
+        &:focus {
+          outline: none;
+        }
+
+        &.focus-input {
+          border: 1px solid #04b5ac;
+          background-color: #04b5ac33;
+      
+          svg {
+            color: #04b5ac;
+          }
+        }
+    
+        &.blur-input {
+          border: 1px solid #d4d9e0;
+          background-color: transparent;
+      
+          svg {
+            color: #919aa3;
+          }
+        }
+      }
+    }
+
+    .member-counting {
+      margin-top: 20px;
+    }
+
+    .box-users-list {
+      z-index: 2;
+      position: absolute;
+      padding: 0;
+
+      .users-list {
+        margin: 0 auto;
+        background-color: rgba(var(--sk_foreground_min_solid,248,248,248),1);
+        padding: 0;
+
+        .user {
+          padding: 10px 10px;
+
+          &:hover {
+            cursor: pointer;
+            background-color: #eaeaea;
+          }
         }
       }
     }

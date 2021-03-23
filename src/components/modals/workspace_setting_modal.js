@@ -8,12 +8,16 @@ import ReactTooltip from "react-tooltip";
 import * as myConstant from '../../constant';
 import defaultAvatar from '../../images/default-avatar.jpg';
 
+import ConfirmRemoveMemberModal from './confirm_remove_member_modal';
+
 const MAX_TITLE_LENGTH = 40;
 
 class WorkspaceSettingModal extends Component {
   constructor(props) {
     super(props);
-    this.onClickRemoveMember = this.onClickRemoveMember.bind(this)
+    this.onClickRemoveMember = this.onClickRemoveMember.bind(this);
+    this.closeConfirmRemoveMember = this.closeConfirmRemoveMember.bind(this);
+    this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
     this.state = {
       errorValidateServer: '',
       title: {value: '', error: ''},
@@ -22,22 +26,30 @@ class WorkspaceSettingModal extends Component {
       code: {value: '', error: ''},
       isActiveSetting: true,
       allMembers: [],
-      errorRemoveMember: ''
+      errorRemoveMember: '',
+      showConfirmRemoveMember: false,
+      removeMember: {id: 0, fullName: ''},
+      isFocusSearchInput: false,
+      searchKey: '',
+      allUsers: []
     }
   }
 
   componentDidMount() {
     this.getWorkspaceInfo();
-    this.getAllMembers();
+    this.getAllMembers("");
   }
 
-  getAllMembers() {
+  getAllMembers(searchKey) {
     let workspaceId = this.props.workspaceId;
     axios({
       method: 'get',
       url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
+      },
+      params: {
+        search_key: searchKey
       }
     }).then((response) => {
       if (response.data.is_success) {
@@ -140,6 +152,12 @@ class WorkspaceSettingModal extends Component {
     })
   }
 
+  closeConfirmRemoveMember() {
+    this.setState({
+      showConfirmRemoveMember: false
+    })
+  }
+
   onClickRemoveMember = (member_id) => {
     let workspaceId = this.props.workspaceId;
     axios({
@@ -164,6 +182,7 @@ class WorkspaceSettingModal extends Component {
     }).catch((error) => {
       console.log(error);
     })
+    this.closeConfirmRemoveMember();
   }
 
   clickOnSubmitBtn = (e) => {
@@ -202,6 +221,17 @@ class WorkspaceSettingModal extends Component {
     }
   }
 
+  onChangeSearchInput = (e) => {
+    this.setState({
+      searchKey: e.target.value
+    })
+    let searchKey = e.target.value.trim();
+
+    if (searchKey !== '') {
+      this.getAllMembers(searchKey);
+    }
+  }
+
   render() {
     const ListMembers = ({allMembers}) => (
       <div className="list-members">
@@ -214,13 +244,22 @@ class WorkspaceSettingModal extends Component {
               <div className="full-name">
                 <span>{member.first_name} </span>
                 <span>{member.last_name}</span>
+                <span className={member.role === "admin" ? "dislay-block role" : "display-none role"}>(Admin)</span>
               </div>
               <div className="email text-dark-gray text-size-15p">{member.email}</div>
             </div>
             <div className="ml-auto action">
-              <FontAwesomeIcon icon={faUserSlash} data-tip data-for="removeMemberTip" className="fa-sm remove" onClick={() => {
-                this.onClickRemoveMember(member.id)
-              }}/>
+              <FontAwesomeIcon icon={faUserSlash} data-tip data-for="removeMemberTip"
+                className={member.role === "admin" ? "fa-sm remove display-none" : "fa-sm remove display-block"}
+                onClick={() => {
+                  this.setState({
+                    removeMember: {
+                      id: member.id,
+                      fullName: member.first_name + " " + member.last_name
+                    },
+                    showConfirmRemoveMember: true
+                  })
+                }}/>
             </div>
           </div>
         ))}
@@ -228,6 +267,12 @@ class WorkspaceSettingModal extends Component {
         <ReactTooltip id="removeMemberTip" place="bottom" effect="solid">
           Remove member
         </ReactTooltip>
+        <ConfirmRemoveMemberModal showModal={this.state.showConfirmRemoveMember}
+          closeModal={this.closeConfirmRemoveMember}
+          confirmRemove={this.onClickRemoveMember}
+          memberId={this.state.removeMember.id}
+          fullName={this.state.removeMember.fullName}
+        />
       </div>
     );
 
@@ -237,7 +282,7 @@ class WorkspaceSettingModal extends Component {
           onHide={this.props.closeModal}
           dialogClassName="modal-50w"
           aria-labelledby="example-modal-sizes-title-lg" 
-          centered
+          className="workspace-setting"
         >
           <Modal.Header closeButton className="workspace-setting-header">
             <Modal.Title className="text-bold">
@@ -313,8 +358,26 @@ class WorkspaceSettingModal extends Component {
                 </div>
               </div>
 
-              <div className={this.state.isActiveSetting ? "display-none" : "display-block"}>
-                <div className="text-dark-gray text-center">
+              <div className={this.state.isActiveSetting ? "display-none member-setting row" : "display-block member-setting row"}>
+                <div className="search-user-input">
+                  <input type="text" placeholder="Type to search users"
+                    className={this.state.isFocusSearchInput ? "focus-input col-sm-12 col-md-9 col-lg-8" : "blur-input col-sm-12 col-md-9 col-lg-8"}
+                    value={this.state.searchKey}
+                    onFocus={() => {
+                      this.setState({
+                        isFocusSearchInput: true
+                      })
+                    }}
+                    onBlur={() => {
+                      this.setState({
+                        isFocusSearchInput: false
+                      })
+                    }}
+                    onChange={this.onChangeSearchInput}
+                  />
+                </div>
+                
+                <div className="text-dark-gray text-center member-counting">
                   You and {this.state.allMembers.length} other members
                 </div>
                 <ListMembers allMembers={this.state.allMembers} />
