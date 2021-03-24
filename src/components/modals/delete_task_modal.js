@@ -13,10 +13,10 @@ class DeteleTaskModal extends Component {
             <p>Are you sure want to delete this task?</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.props.closeModal}>
+            <Button variant="secondary" className="close-btn-modal" onClick={this.props.closeModal}>
               Close
             </Button>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" className="submit-btn-modal" type="submit">
               Delete
             </Button>
           </Modal.Footer>

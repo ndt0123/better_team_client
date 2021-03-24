@@ -30,8 +30,7 @@ class WorkspaceSettingModal extends Component {
       showConfirmRemoveMember: false,
       removeMember: {id: 0, fullName: ''},
       isFocusSearchInput: false,
-      searchKey: '',
-      allUsers: []
+      searchKey: ''
     }
   }
 
@@ -172,7 +171,8 @@ class WorkspaceSettingModal extends Component {
     }).then((response) => {
       if (response.data.is_success) {
         this.setState({
-          allMembers: response.data.members
+          allMembers: response.data.members,
+          errorRemoveMember: ''
         })
       } else {
         this.setState({
@@ -265,7 +265,7 @@ class WorkspaceSettingModal extends Component {
         ))}
 
         <ReactTooltip id="removeMemberTip" place="bottom" effect="solid">
-          Remove member
+          Remove
         </ReactTooltip>
         <ConfirmRemoveMemberModal showModal={this.state.showConfirmRemoveMember}
           closeModal={this.closeConfirmRemoveMember}
@@ -360,7 +360,7 @@ class WorkspaceSettingModal extends Component {
 
               <div className={this.state.isActiveSetting ? "display-none member-setting row" : "display-block member-setting row"}>
                 <div className="search-user-input">
-                  <input type="text" placeholder="Type to search users"
+                  <input type="text" placeholder="Type to search members"
                     className={this.state.isFocusSearchInput ? "focus-input col-sm-12 col-md-9 col-lg-8" : "blur-input col-sm-12 col-md-9 col-lg-8"}
                     value={this.state.searchKey}
                     onFocus={() => {
@@ -386,10 +386,12 @@ class WorkspaceSettingModal extends Component {
             </Modal.Body>
             <div className={this.state.isActiveSetting ? "display-block" : "display-none"}>
               <Modal.Footer>
-                <Button variant="secondary" onClick={this.props.closeModal}>
+                <Button variant="secondary" className="close-btn-modal"
+                  onClick={this.props.closeModal}>
                   Close
                 </Button>
-                <Button variant="primary" type="submit" onClick={this.clickOnSubmitBtn}>
+                <Button variant="primary" className="submit-btn-modal" type="submit"
+                  onClick={this.clickOnSubmitBtn}>
                   Save
                 </Button>
               </Modal.Footer>

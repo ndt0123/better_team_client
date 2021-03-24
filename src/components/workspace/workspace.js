@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faFilter, faFolder, faPlus, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faCommentDots, faFilter, faFolder, faPlus, faEllipsisV, faSleigh } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 
 import * as myConstant from '../../constant';
@@ -11,14 +11,19 @@ import '../../styles/constant.scss';
 
 import TaskList from './task-list';
 import WorkspaceSettingModal from '../modals/workspace_setting_modal';
+import AddMemberModal from '../modals/add_member_modal';
+import NewTaskModal from '../modals/new_task_modal';
 
 class Workspace extends Component {
   constructor(props) {
     super(props);
     this.closeSettingWorkspace = this.closeSettingWorkspace.bind(this);
+    this.closeAddMemberModal = this.closeAddMemberModal.bind(this);
     this.state = {
       isFocusSearchInput: false,
-      showSettingWorkspace: false
+      showSettingWorkspace: false,
+      showAddMemberModal: false,
+      showNewTaskModal: false
     }
   }
 
@@ -31,12 +36,29 @@ class Workspace extends Component {
     })
   }
 
+  closeAddMemberModal = () => {
+    this.setState({
+      showAddMemberModal: false
+    })
+  }
+
+  closeNewTaskModal = () => {
+    this.setState({
+      showNewTaskModal: false
+    })
+  }
+
   render() {
     return(
       <div className="row main-body">
         <div className="col-12 pad-b-15p">
           <div className="row pad-lr-15p header-btn">
-            <div className="new-task-btn mar-r-15p">
+            <div className="new-task-btn mar-r-15p"
+              onClick={() => {
+                this.setState({
+                  showNewTaskModal: true
+                })
+              }}>
               <FontAwesomeIcon icon={faPlus} className="fa-xs" />
               <span className="pad-l-5p">New task</span>
             </div>
@@ -68,13 +90,20 @@ class Workspace extends Component {
                 <div className="dropdown">
                   <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray dropdown-toggle"   id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                    <span className="dropdown-item">Add new members</span>
+                    <span className="dropdown-item"
+                      onClick={() => {
+                        this.setState({
+                          showAddMemberModal: true
+                        })
+                      }}
+                    >Add new members</span>
                     <span className="dropdown-item"
                       onClick={() => {
                         this.setState({
                           showSettingWorkspace: true
                         })
-                      }}>Setting</span>
+                      }}
+                    >Setting</span>
                   </div>
                 </div>
               </div>
@@ -137,6 +166,13 @@ class Workspace extends Component {
         <WorkspaceSettingModal showModal={this.state.showSettingWorkspace}
           closeModal={this.closeSettingWorkspace}
           workspaceId={this.props.match.params.id}
+        />
+        <AddMemberModal showModal={this.state.showAddMemberModal}
+          closeModal={this.closeAddMemberModal}
+          workspaceId={this.props.match.params.id}
+        />
+        <NewTaskModal showModal={this.state.showNewTaskModal}
+          closeModal={this.closeNewTaskModal}
         />
       </div>
     );

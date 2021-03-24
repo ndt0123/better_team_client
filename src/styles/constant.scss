@@ -243,3 +243,25 @@
 //     background-color: transparent;
 //   }
 // }
+
+
+.submit-btn-modal {
+  background-color: #04b5ac !important;
+  border-color: #04b5ac !important;
+  color: white !important;
+
+  &:hover {
+    background-color: #1c7b7f !important;
+    border-color: #1c7b7f !important;
+  }
+}
+
+.close-btn-modal {
+  background-color: transparent !important;
+  border: none !important;
+  color: #67696c !important;
+
+  &:hover {
+    color: #04b5ac !important;
+  }
+}

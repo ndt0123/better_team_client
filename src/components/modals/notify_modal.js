@@ -30,7 +30,7 @@ class NotifyModal extends Component {
           {this.props.notifyContent}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary">Close</Button>
+          <Button variant="primary" className="close-btn-modal">Close</Button>
         </Modal.Footer>
       </Modal>
     );

@@ -275,7 +275,7 @@
   }
 }
 
-.list-members {
+.list-members, .list-users {
   padding: 0 16px;
 
   .member {
@@ -321,56 +321,6 @@
 
 .workspace-setting {
   .member-setting {
-    .search-user-input {
-      text-align: center;
-
-      input{
-        background-color: transparent;
-        color: #888c94;
-        border-radius: 5px;
-        padding: 3px 10px;
-    
-        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-          font-size: 13px;
-          font-style: italic;
-        }
-        &::-moz-placeholder { /* Firefox 19+ */
-          font-size: 13px;
-          font-style: italic;
-        }
-        &:-ms-input-placeholder { /* IE 10+ */
-          font-size: 13px;
-          font-style: italic;
-        }
-        &:-moz-placeholder { /* Firefox 18- */
-          font-size: 13px;
-          font-style: italic;
-        }
-    
-        &:focus {
-          outline: none;
-        }
-
-        &.focus-input {
-          border: 1px solid #04b5ac;
-          background-color: #04b5ac33;
-      
-          svg {
-            color: #04b5ac;
-          }
-        }
-    
-        &.blur-input {
-          border: 1px solid #d4d9e0;
-          background-color: transparent;
-      
-          svg {
-            color: #919aa3;
-          }
-        }
-      }
-    }
-
     .member-counting {
       margin-top: 20px;
     }
@@ -395,5 +345,63 @@
         }
       }
     }
+  }
+}
+
+.workspace-setting, .add-member-modal {
+  .search-user-input {
+    text-align: center;
+
+    input{
+      background-color: transparent;
+      color: #888c94;
+      border-radius: 5px;
+      padding: 7px 10px;
+  
+      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        font-size: 13px;
+        font-style: italic;
+      }
+      &::-moz-placeholder { /* Firefox 19+ */
+        font-size: 13px;
+        font-style: italic;
+      }
+      &:-ms-input-placeholder { /* IE 10+ */
+        font-size: 13px;
+        font-style: italic;
+      }
+      &:-moz-placeholder { /* Firefox 18- */
+        font-size: 13px;
+        font-style: italic;
+      }
+  
+      &:focus {
+        outline: none;
+      }
+
+      &.focus-input {
+        border: 1px solid #04b5ac;
+        background-color: #04b5ac33;
+    
+        svg {
+          color: #04b5ac;
+        }
+      }
+  
+      &.blur-input {
+        border: 1px solid #d4d9e0;
+        background-color: transparent;
+    
+        svg {
+          color: #919aa3;
+        }
+      }
+    }
+  }
+}
+
+.add-member-modal {
+  .list-users {
+    margin-top: 20px;
   }
 }

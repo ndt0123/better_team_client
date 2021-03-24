@@ -17,12 +17,12 @@ class ConfirmRemoveMemberModal extends Component {
             <span> from workspace?</span>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => {
+            <Button variant="secondary" className="close-btn-modal" onClick={() => {
               this.props.closeModal()
             }}>
               Close
             </Button>
-            <Button variant="primary" onClick={() => {
+            <Button variant="primary" className="submit-btn-modal" onClick={() => {
               this.props.confirmRemove(this.props.memberId)
             }}>
               Remove
