@@ -234,7 +234,7 @@ class Dashboard extends Component {
                   <h5>All Workspace</h5>
                 </div>
                 <div className="col-6 col-sm-4 input-group">
-                  <input type="text" className="form-control pad-t-0p pad-b-0p mar-r-15p" placeholder="Search workspace"  aria-describedby="basic-addon2"/>
+                  <input type="text" className="form-control pad-t-0p pad-b-0p mar-r-15p custom-input" placeholder="Search workspace"  aria-describedby="basic-addon2"/>
                 </div>
               </div>
               <div className="">

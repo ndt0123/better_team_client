@@ -172,6 +172,10 @@
   width: 16% !important;
 }
 
+.wid-100per {
+  width: 100% !important;
+}
+
 .wid-240p {
   width: 240px !important;
 }
@@ -265,3 +269,40 @@
     color: #04b5ac !important;
   }
 }
+
+.modal-title {
+  font-size: 20px !important;
+  font-weight: 800 !important;
+}
+
+.custom-input{
+  background-color: transparent;
+  color: #888c94;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+  &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-size: 15px;
+    font-style: italic;
+  }
+  &::-moz-placeholder { /* Firefox 19+ */
+    font-size: 15px;
+    font-style: italic;
+  }
+  &:-ms-input-placeholder { /* IE 10+ */
+    font-size: 15px;
+    font-style: italic;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+    font-size: 15px;
+    font-style: italic;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+// input.custom-input {
+//   height: 32px !important;
+// }

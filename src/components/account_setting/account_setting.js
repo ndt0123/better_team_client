@@ -149,24 +149,24 @@ class AccountSetting extends Component {
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email address</label>
-                <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" readOnly value={this.state.email} />
+                <input type="email" className="form-control custom-input" id="email" aria-describedby="emailHelp" placeholder="Email" readOnly value={this.state.email} />
               </div>
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="firstName">First name</label>
-                  <input type="text" className="form-control" id="firstName" placeholder="First name" value={this.state.first_name} required onChange={this.onChangeFirstName} />
+                  <input type="text" className="form-control custom-input" id="firstName" placeholder="First name" value={this.state.first_name} required onChange={this.onChangeFirstName} />
                   <span className="error-input-validate">{this.state.errorValidate.first_name}</span>
                 </div>
                 <div className="form-group col">
                   <label htmlFor="lastName">Last name</label>
-                  <input type="text" className="form-control" id="lastName" placeholder="Last name" value={this.state.last_name} required onChange={this.onChangeLastName} />
+                  <input type="text" className="form-control custom-input" id="lastName" placeholder="Last name" value={this.state.last_name} required onChange={this.onChangeLastName} />
                   <span className="error-input-validate">{this.state.errorValidate.last_name}</span>
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="birthday">Birthday</label>
-                  <input type="date" className="form-control" id="birthday" placeholder="Birthday" value={this.state.birthday} onChange={(e) => {
+                  <input type="date" className="form-control custom-input" id="birthday" placeholder="Birthday" value={this.state.birthday} onChange={(e) => {
                     this.setState({
                       birthday: e.target.value
                     })
@@ -174,7 +174,7 @@ class AccountSetting extends Component {
                 </div>
                 <div className="form-group col">
                   <label htmlFor="phoneNumber">Phone number</label>
-                  <input type="tel" className="form-control" id="phoneNumber" placeholder="Phone number" pattern="[0-9]{10}" value={this.state.phone_number} onChange={(e) => {
+                  <input type="tel" className="form-control custom-input" id="phoneNumber" placeholder="Phone number" pattern="[0-9]{10}" value={this.state.phone_number} onChange={(e) => {
                     this.setState({
                       phone_number: e.target.value
                     })
@@ -183,7 +183,7 @@ class AccountSetting extends Component {
               </div>
               <div className="form-group">
                 <label htmlFor="address">Address</label>
-                <input type="text" className="form-control" id="address" placeholder="Address" value={this.state.address} onChange={(e) => {
+                <input type="text" className="form-control custom-input" id="address" placeholder="Address" value={this.state.address} onChange={(e) => {
                   this.setState({
                     address: e.target.value
                   })
@@ -192,7 +192,7 @@ class AccountSetting extends Component {
               <div className="form-row">
                 <div className="form-group col">
                   <label htmlFor="university">University</label>
-                  <input type="text" className="form-control" id="university" placeholder="University" value={this.state.university} onChange={(e) => {
+                  <input type="text" className="form-control custom-input" id="university" placeholder="University" value={this.state.university} onChange={(e) => {
                     this.setState({
                       university: e.target.value
                     })
@@ -200,7 +200,7 @@ class AccountSetting extends Component {
                 </div>
                 <div className="form-group col">
                   <label htmlFor="facebook">Facebook</label>
-                  <input type="text" className="form-control" id="facebook" placeholder="Facebook" value={this.state.facebook} onChange={(e) => {
+                  <input type="text" className="form-control custom-input" id="facebook" placeholder="Facebook" value={this.state.facebook} onChange={(e) => {
                     this.setState({
                       facebook: e.target.value
                     })
@@ -210,7 +210,7 @@ class AccountSetting extends Component {
               <div className="form-group">
                 <legend className="col-form-label pt-0">Sex</legend>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="sex" id="maleSex" value="male" checked={this.state.sex === "male"} onChange={(e) => {
+                  <input className="form-check-input custom-input" type="radio" name="sex" id="maleSex" value="male" checked={this.state.sex === "male"} onChange={(e) => {
                     this.setState({
                       sex: e.target.value
                     })
@@ -218,7 +218,7 @@ class AccountSetting extends Component {
                   <label className="form-check-label" htmlFor="maleSex">Male</label>
                 </div>
                 <div className="form-check form-check-inline">
-                  <input className="form-check-input" type="radio" name="sex" id="femaleSex" value="female" checked={this.state.sex === "female"} onChange={(e) => {
+                  <input className="form-check-input custom-input" type="radio" name="sex" id="femaleSex" value="female" checked={this.state.sex === "female"} onChange={(e) => {
                     this.setState({
                       sex: e.target.value
                     })

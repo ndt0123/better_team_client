@@ -284,12 +284,12 @@ class WorkspaceSettingModal extends Component {
           aria-labelledby="example-modal-sizes-title-lg" 
           className="workspace-setting"
         >
-          <Modal.Header closeButton className="workspace-setting-header">
+          <Modal.Header closeButton className="modal-header-custom">
             <Modal.Title className="text-bold">
               Workspace Setting
 
-              <div className="box-workspace-setting-header-option">
-                <div className={this.state.isActiveSetting ? "workspace-setting-header-option active" : "workspace-setting-header-option inactive"}
+              <div className="box-header-option">
+                <div className={this.state.isActiveSetting ? "header-option active" : "header-option inactive"}
                   onClick={() => {
                     this.setState({
                       isActiveSetting: true
@@ -297,7 +297,7 @@ class WorkspaceSettingModal extends Component {
                   }}>
                   Information
                 </div>
-                <div className={!this.state.isActiveSetting ? "workspace-setting-header-option active" : "workspace-setting-header-option inactive"}
+                <div className={!this.state.isActiveSetting ? "header-option active" : "header-option inactive"}
                   onClick={() => {
                     this.setState({
                       isActiveSetting: false
@@ -314,7 +314,7 @@ class WorkspaceSettingModal extends Component {
                 <span className="text-dark-gray text-size-15p">Workspaces are where your team communicates. They’re best when organized around a topic — #math, for example.</span>
                 <div className="form-group mar-t-15p">
                   <label htmlFor="title" className="text-bold">Title</label>
-                  <input type="text" className="form-control" id="title" placeholder="Workspace's title goes here" 
+                  <input type="text" className="form-control custom-input" id="title" placeholder="Workspace's title goes here" 
                     value={this.state.title.value}
                     onChange={this.onChangeTitle}
                   />
@@ -322,7 +322,7 @@ class WorkspaceSettingModal extends Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="description" className="text-bold">Description</label>
-                  <input type="text" className="form-control" id="description"  placeholder="Type something to describe your workspace" 
+                  <input type="text" className="form-control custom-input" id="description"  placeholder="Type something to describe your workspace" 
                     value={this.state.description.value} 
                     onChange={this.onChangeDescription}
                   />
@@ -333,7 +333,7 @@ class WorkspaceSettingModal extends Component {
                 <div className="form-group custom-control custom-switch">
                   <input
                     type="checkbox"
-                    className="custom-control-input"
+                    className="custom-control-input custom-input"
                     id="is-private"
                     checked={this.state.is_private.value}
                     onChange={this.onChangeIsPrivate}
@@ -344,7 +344,7 @@ class WorkspaceSettingModal extends Component {
                 </div>
                 <div className={this.state.is_private.value ? "form-group display-block" : "form-group display-none"}>
                   <label htmlFor="code" className="text-bold">Workspace's code</label>
-                  <input type="text" className="form-control" id="code" 
+                  <input type="text" className="form-control custom-input" id="code" 
                     placeholder="Workspace's code"
                     value={this.state.code.value}
                     onChange={this.onChangeCode}
@@ -361,7 +361,7 @@ class WorkspaceSettingModal extends Component {
               <div className={this.state.isActiveSetting ? "display-none member-setting row" : "display-block member-setting row"}>
                 <div className="search-user-input">
                   <input type="text" placeholder="Type to search members"
-                    className={this.state.isFocusSearchInput ? "focus-input col-sm-12 col-md-9 col-lg-8" : "blur-input col-sm-12 col-md-9 col-lg-8"}
+                    className={this.state.isFocusSearchInput ? "focus-input col-sm-12 col-md-9 col-lg-8 custom-input" : "blur-input col-sm-12 col-md-9 col-lg-8 custom-input"}
                     value={this.state.searchKey}
                     onFocus={() => {
                       this.setState({

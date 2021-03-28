@@ -168,6 +168,16 @@
     background-color: #f3f8f8;
     border-radius: 5px;
 
+    .task-title {
+      cursor: pointer;
+
+      span {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
     &:hover {
       cursor: grab;
     }
@@ -198,15 +208,15 @@
       font-size: 14px;
 
       &.low {
-        background-color: yellowgreen;
-      }
-
-      &.normal {
         background-color: rgb(59, 87, 0);
       }
 
-      &.high {
+      &.normal {
         background-color: rgb(223, 127, 2);
+      }
+
+      &.high {
+        background-color: rgb(192, 6, 6);
       }
 
       &.urgent {
@@ -219,7 +229,7 @@
       color:  #5e6772;
     }
 
-    .completion {
+    .label {
       border-radius: 20px;
       color: white;
       padding: 3px 6px;
@@ -237,14 +247,18 @@
       &.excellent {
         background-color: #36a3f7;
       }
+
+      &.pass-due-date {
+        background-color: #f4516c;
+      }
     }
   }
 }
 
-.workspace-setting-header {
+.modal-header.modal-header-custom {
   padding-bottom: 0 !important;
 
-  .box-workspace-setting-header-option {
+  .box-header-option {
     display: flex;
     margin-top: 10px;
 
@@ -252,7 +266,7 @@
       margin-right: 10px;
     }
 
-    .workspace-setting-header-option {
+    .header-option {
       padding: 5px;
       font-weight: bold;
       font-size: 16px;
@@ -403,5 +417,163 @@
 .add-member-modal {
   .list-users {
     margin-top: 20px;
+  }
+}
+
+select#assigned {
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 7px 10px;
+
+  option:hover {
+    background-color: green !important;
+    padding: 5px 10px !important;
+  }
+}
+
+.task-pass-due-date {
+  border-color: red !important;
+  background-color: lightpink !important;
+}
+
+.task-detail-modal {
+  .modal-title {
+    width: 100%;
+  }
+
+  .gray-icon {
+    color: #888c94;
+  }
+
+  .modal-body {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .custom-label {
+      h5 {
+        display: flex;
+        align-items: center;
+        margin: 0 0 5px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #888c94;
+        width: 100%;
+
+        span {
+          display: block;
+          flex: 1 1 auto;
+          height: 1px;
+          margin: 0 5px;
+          border-top: 1px solid #e8ebf2;
+        }
+      }
+    }
+
+    .left-side {
+      padding-top: 16px;
+      padding-bottom: 16px;
+
+      .detail {
+        .task-title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+
+        .assigned {
+          display: flex;
+
+          .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            margin-right: 10px;
+          }
+
+          .assigned-user {
+            cursor: pointer;
+          }
+
+          svg {
+            margin-left: 10px;
+          }
+        }
+
+        .status {
+          div {
+            cursor: pointer;
+          }
+
+          .pending-icon {
+            color: rgb(180, 231, 255);
+          }
+
+          .in_progress-icon {
+            color: rgb(255, 209, 93);
+          }
+
+          .finished-icon {
+            color: rgb(69, 155, 152);
+          }
+
+          svg:last-child {
+            margin-left: 10px;
+          }
+
+          svg:first-child {
+            margin-right: 5px;
+          }
+        }
+
+        .priority {
+          div {
+            cursor: pointer;
+          }
+
+          .low-icon {
+            color: rgb(0, 187, 78);
+          }
+
+          .normal-icon {
+            color: rgb(184, 0, 175);
+          }
+
+          .high-icon {
+            color: rgba(255, 0, 0, 0.678);
+          }
+
+          svg:last-child {
+            margin-left: 10px;
+          }
+
+          svg:first-child {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .comment {
+
+      }
+
+      .history {
+
+      }
+    }
+
+    .right-side {
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+  }
+
+  .task-detail {
+    .left-side {
+      border-right: 1px solid #dee2e6;
+    }
+  
+    .right-side {
+  
+    }
   }
 }

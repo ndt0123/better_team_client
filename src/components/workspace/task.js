@@ -7,7 +7,7 @@ import '../../styles/workspace.scss';
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
 
-class TaskList extends Component {
+class Task extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,11 +16,17 @@ class TaskList extends Component {
 
   render() {
     return(
-      <div className="col-12 list mar-t-15p">
+      <div className={new Date() > new Date(this.props.task.due_date) ? "col-12 list mar-t-15p task-pass-due-date" : "col-12 list mar-t-15p"}>
         <div className="row pad-b-15p">
-          <div className="float-left col-11">
-            <span>This is title of task 1 This is title of task 1</span>
-            <span className="completion at_risk">At risk</span>
+          <div className="float-left col-11 task-title"
+            onClick={() => {
+              this.props.openTaskDetailModal(this.props.task.id);
+            }}>
+            <span>{this.props.task.title}</span>
+            {
+              new Date() > new Date(this.props.task.due_date) ? 
+                <label className="label pass-due-date">Pass due date</label> : ""
+            }
           </div>
           <div className="float-right col-1 menu-icon">
             <div className="dropdown">
@@ -35,15 +41,19 @@ class TaskList extends Component {
           </div>  
         </div>
         <div className="mar-b-15p">
-          <ProgressBar variant="warning" now={25} label={`25%`} />
+          <ProgressBar variant="warning"
+            now={this.props.task.percentage_completed}
+            label={this.props.task.percentage_completed + '%'} />
         </div>
         <div>
-          <span className="assign">Nguyen Duy Tam</span>
-          <span className="priority high float-right">High</span>
+          <span className="assign">{this.props.task.assigned_user_name !== "" ? this.props.task.assigned_user_name : "No assigned"}</span>
+          <span className={"priority " + this.props.task.priority + " float-right"}>
+            {this.props.task.priority}
+          </span>
         </div>               
       </div>
     );
   }
 }
 
-export default TaskList;
+export default Task;

@@ -143,7 +143,7 @@ class NewWorkspaceModal extends Component {
               <span className="text-dark-gray text-size-15p">Workspaces are where your team communicates. They’re best when organized around a topic — #math, for example.</span>
               <div className="form-group mar-t-15p">
                 <label htmlFor="title" className="text-bold">Title</label>
-                <input type="text" className="form-control" id="title" placeholder="Workspace's title goes here" 
+                <input type="text" className="form-control custom-input" id="title" placeholder="Workspace's title goes here" 
                   value={this.state.title.value}
                   onChange={this.onChangeTitle}
                 />
@@ -151,7 +151,7 @@ class NewWorkspaceModal extends Component {
               </div>
               <div className="form-group">
                 <label htmlFor="description" className="text-bold">Description</label>
-                <input type="text" className="form-control" id="description"  placeholder="Type something to describe your workspace" 
+                <input type="text" className="form-control custom-input" id="description"  placeholder="Type something to describe your workspace" 
                   value={this.state.description.value} 
                   onChange={this.onChangeDescription}
                 />
@@ -162,7 +162,7 @@ class NewWorkspaceModal extends Component {
               <div className="form-group custom-control custom-switch">
                 <input
                   type="checkbox"
-                  className="custom-control-input"
+                  className="custom-control-input custom-input"
                   id="is-private"
                   checked={this.state.is_private.value}
                   onChange={this.onChangeIsPrivate}
@@ -173,7 +173,7 @@ class NewWorkspaceModal extends Component {
               </div>
               <div className={this.state.is_private.value ? "form-group display-block" : "form-group display-none"}>
                 <label htmlFor="code" className="text-bold">Workspace's code</label>
-                <input type="text" className="form-control" id="code" 
+                <input type="text" className="form-control custom-input" id="code" 
                   placeholder="Workspace's code"
                   value={this.state.code.value}
                   onChange={this.onChangeCode}
