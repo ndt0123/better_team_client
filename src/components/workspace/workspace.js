@@ -290,6 +290,7 @@ class Workspace extends Component {
         <TaskDetailModal showModal={this.state.showTaskDetailModal.isShow}
           closeModal={this.closeTaskDetailModal}
           id={this.state.showTaskDetailModal.id}
+          workspaceId={this.props.match.params.id}
         />
       </div>
     );

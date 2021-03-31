@@ -41,7 +41,12 @@ class Task extends Component {
           </div>  
         </div>
         <div className="mar-b-15p">
-          <ProgressBar variant="warning"
+          <ProgressBar
+            variant={this.props.task.percentage_completed < 20 ?
+              "danger" : 
+              this.props.task.percentage_completed >= 20
+              && this.props.task.percentage_completed < 60 ?
+              "warning" : "info"}
             now={this.props.task.percentage_completed}
             label={this.props.task.percentage_completed + '%'} />
         </div>

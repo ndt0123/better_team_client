@@ -478,6 +478,20 @@ select#assigned {
           font-size: 18px;
           font-weight: bold;
           margin-bottom: 20px;
+
+          input {
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          .edit-task-icon {
+            padding-left: 7px;
+            padding-right: 7px;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
         }
 
         .assigned {
@@ -550,6 +564,34 @@ select#assigned {
             margin-right: 5px;
           }
         }
+
+        .created-at {
+          div {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            font-size: 14px;
+            color: #67696c;
+            border-top: 1px solid #e8ebf2;
+
+            :first-child {
+              font-weight: bold;
+            }
+          }
+        }
+
+        .percentage-completed {
+          input {
+            margin-bottom: 10px;
+          }
+        }
+
+        .custom-label {
+          padding-bottom: 20px;
+        }
+
+        .visible-input {
+          border: none;
+        }
       }
 
       .comment {
@@ -574,6 +616,178 @@ select#assigned {
   
     .right-side {
   
+    }
+  }
+}
+
+.select-task-status-modal {
+  .pending-icon {
+    color: rgb(180, 231, 255);
+  }
+
+  .in_progress-icon {
+    color: rgb(255, 209, 93);
+  }
+
+  .finished-icon {
+    color: rgb(69, 155, 152);
+  }
+
+  .modal-body {
+    padding-left: 0;
+    padding-right: 0;
+
+    .list-status {
+      padding: 16px;
+  
+      &:hover {
+        cursor: pointer;
+      }
+  
+      &.pending {
+        &:hover {
+          background-color: rgba(180, 231, 255, 0.452);
+        }
+      }
+  
+      &.in-progress {
+        &:hover {
+          background-color: rgba(255, 209, 93, 0.452);
+        }
+      }
+  
+      &.finished {
+        &:hover {
+          background-color: rgba(69, 155, 152, 0.452);
+        }
+      }
+  
+      svg {
+        margin-right: 15px;
+      }
+  
+      svg.float-right {
+        color:  #04b5ac;
+      }
+  
+      span {
+        color: #67696c;
+      }
+
+      &.active {
+        &.pending {
+          background-color: rgba(180, 231, 255, 0.452);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+    
+        &.in-progress {
+          background-color: rgba(255, 209, 93, 0.452);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+    
+        &.finished {
+          background-color: rgba(69, 155, 152, 0.452);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+.select-task-priority-modal {
+  .low-icon {
+    color: rgb(0, 187, 78);
+  }
+
+  .normal-icon {
+    color: rgb(184, 0, 175);
+  }
+
+  .high-icon {
+    color: rgba(255, 0, 0, 0.678);
+  }
+
+  .modal-body {
+    padding-left: 0;
+    padding-right: 0;
+
+    .list-priority {
+      padding: 16px;
+  
+      &:hover {
+        cursor: pointer;
+      }
+  
+      &.low {
+        &:hover {
+          background-color: rgba(0, 187, 78, 0.13);
+        }
+      }
+  
+      &.normal {
+        &:hover {
+          background-color: rgba(184, 0, 175, 0.13);
+        }
+      }
+  
+      &.high {
+        &:hover {
+          background-color: rgba(255, 0, 0, 0.13);
+        }
+      }
+  
+      svg {
+        margin-right: 15px;
+      }
+  
+      svg.float-right {
+        color:  #04b5ac;
+      }
+  
+      span {
+        color: #67696c;
+      }
+
+      &.active {
+        &.low {
+          background-color: rgba(0, 187, 78, 0.13);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+    
+        &.normal {
+          background-color: rgba(184, 0, 175, 0.13);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+    
+        &.high {
+          background-color: rgba(255, 0, 0, 0.13);
+
+          span {
+            color: #04b5ac;
+            font-weight: bold;
+          }
+        }
+      }
     }
   }
 }

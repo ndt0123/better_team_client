@@ -7,7 +7,10 @@ class ConfirmRemoveMemberModal extends Component {
   render() {
     return(
       <div>
-        <Modal show={this.props.showModal} onHide={this.props.closeModal}aria-labelledby="example-modal-sizes-title-lg" className="modal-opacity-0">
+        <Modal show={this.props.showModal}
+          onHide={this.props.closeModal}
+          aria-labelledby="example-modal-sizes-title-lg"
+          className="modal-color">
           <Modal.Header closeButton>
             <Modal.Title>Remove member</Modal.Title>
           </Modal.Header>

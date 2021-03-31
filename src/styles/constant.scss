@@ -239,14 +239,9 @@
   display: block !important;
 }
 
-////////////////
-// .modal-opacity-0 {
-//   .modal-backdrop {
-//     opacity: 0 !important;
-//     background: none;
-//     background-color: transparent;
-//   }
-// }
+.display-inline-block {
+  display: inline-block !important;
+}
 
 
 .submit-btn-modal {
@@ -303,6 +298,6 @@
   }
 }
 
-// input.custom-input {
-//   height: 32px !important;
-// }
+.modal-color {
+  background-color: #00000054 !important;
+}

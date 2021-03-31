@@ -1,1 +1,10 @@
 export const HOST = "http://localhost:3000/";
+export const PENDING_STATUS_VALUE = 'pending';
+export const PENDING_STATUS_TEXT = 'Pending';
+export const IN_PROGRESS_STATUS_VALUE = 'in_progress';
+export const IN_PROGRESS_STATUS_TEXT = 'In Progress';
+export const FINISHED_STATUS_VALUE = 'finished';
+export const FINISHED_STATUS_TEXT = 'Finished'
+export const LOW_PRIORITY_VALUE = 'low';
+export const NORMAL_PRIORITY_VALUE = 'normal';
+export const HIGH_PRIORITY_VALUE = 'high';
