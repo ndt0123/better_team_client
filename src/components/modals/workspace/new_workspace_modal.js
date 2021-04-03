@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-import * as myConstant from '../../constant';
+import * as myConstant from '../../../constant';
 
 const MAX_TITLE_LENGTH = 40;
 

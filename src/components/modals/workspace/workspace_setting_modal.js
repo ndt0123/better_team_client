@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 
-import * as myConstant from '../../constant';
-import defaultAvatar from '../../images/default-avatar.jpg';
+import * as myConstant from '../../../constant';
+import defaultAvatar from '../../../images/default-avatar.jpg';
 
 import ConfirmRemoveMemberModal from './confirm_remove_member_modal';
 
@@ -359,7 +359,7 @@ class WorkspaceSettingModal extends Component {
               </div>
 
               <div className={this.state.isActiveSetting ? "display-none member-setting row" : "display-block member-setting row"}>
-                <div className="search-user-input">
+                <div className="search-user-input-custom">
                   <input type="text" placeholder="Type to search members"
                     className={this.state.isFocusSearchInput ? "focus-input col-sm-12 col-md-9 col-lg-8 custom-input" : "blur-input col-sm-12 col-md-9 col-lg-8 custom-input"}
                     value={this.state.searchKey}

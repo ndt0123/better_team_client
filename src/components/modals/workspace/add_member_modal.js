@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 
-import * as myConstant from '../../constant';
-import defaultAvatar from '../../images/default-avatar.jpg';
+import * as myConstant from '../../../constant';
+import defaultAvatar from '../../../images/default-avatar.jpg';
 
 class AddMemberModal extends Component {
   constructor(props) {
@@ -127,7 +127,7 @@ class AddMemberModal extends Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="search-user-input">
+          <div className="search-user-input-custom">
             <input type="text" placeholder="Enter a name or email"
               className={this.state.isFocusSearchInput ? "focus-input col-12" : "blur-input col-12"}
               value={this.state.searchKey}

@@ -297,7 +297,7 @@
 
     &:hover {
       cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.075);
+      background-color: #ecf7f7;
 
       .full-name {
         color: #04b5ac;
@@ -362,53 +362,51 @@
   }
 }
 
-.workspace-setting, .add-member-modal {
-  .search-user-input {
-    text-align: center;
+.search-user-input-custom {
+  text-align: center;
 
-    input{
+  input{
+    background-color: transparent;
+    color: #888c94;
+    border-radius: 5px;
+    padding: 7px 10px;
+
+    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      font-size: 13px;
+      font-style: italic;
+    }
+    &::-moz-placeholder { /* Firefox 19+ */
+      font-size: 13px;
+      font-style: italic;
+    }
+    &:-ms-input-placeholder { /* IE 10+ */
+      font-size: 13px;
+      font-style: italic;
+    }
+    &:-moz-placeholder { /* Firefox 18- */
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.focus-input {
+      border: 1px solid #04b5ac;
+      background-color: #04b5ac33;
+  
+      svg {
+        color: #04b5ac;
+      }
+    }
+
+    &.blur-input {
+      border: 1px solid #d4d9e0;
       background-color: transparent;
-      color: #888c94;
-      border-radius: 5px;
-      padding: 7px 10px;
   
-      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        font-size: 13px;
-        font-style: italic;
-      }
-      &::-moz-placeholder { /* Firefox 19+ */
-        font-size: 13px;
-        font-style: italic;
-      }
-      &:-ms-input-placeholder { /* IE 10+ */
-        font-size: 13px;
-        font-style: italic;
-      }
-      &:-moz-placeholder { /* Firefox 18- */
-        font-size: 13px;
-        font-style: italic;
-      }
-  
-      &:focus {
-        outline: none;
-      }
-
-      &.focus-input {
-        border: 1px solid #04b5ac;
-        background-color: #04b5ac33;
-    
-        svg {
-          color: #04b5ac;
-        }
-      }
-  
-      &.blur-input {
-        border: 1px solid #d4d9e0;
-        background-color: transparent;
-    
-        svg {
-          color: #919aa3;
-        }
+      svg {
+        color: #919aa3;
       }
     }
   }
@@ -788,6 +786,47 @@ select#assigned {
           }
         }
       }
+    }
+  }
+}
+
+.select-task-assigned-modal {
+  .modal-body {
+    padding: 0;
+  }
+
+  .search-user-input-custom {
+    padding: 16px;
+  }
+
+  .list-users {
+    .member {
+      &.active {
+        background-color: #ecf7f7;
+
+        .full-name, svg {
+          color: #04b5ac;
+        }
+      }
+
+      .avatar {
+        img {
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+
+ul.pagination {
+  margin-bottom: 0;
+  padding-top: 16px;
+
+  li {
+    margin: 5px;
+
+    &.active {
+      text-decoration: underline;
     }
   }
 }

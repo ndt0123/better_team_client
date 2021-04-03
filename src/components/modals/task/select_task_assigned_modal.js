@@ -1,17 +1,16 @@
 import axios from 'axios';
 import React, {Component} from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import ReactTooltip from "react-tooltip";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-import * as myConstant from '../../constant';
-import defaultAvatar from '../../images/default-avatar.jpg';
+import { HOST } from '../../../constant';
+import defaultAvatar from '../../../images/default-avatar.jpg';
 
 class SelectTaskAssignedModal extends Component {
   constructor(props) {
     super(props);
-    // this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
+    this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
     // this.addMember = this.addMember.bind(this);
     this.getAllMembers = this.getAllMembers.bind(this);
     this.state = {
@@ -30,12 +29,13 @@ class SelectTaskAssignedModal extends Component {
     let workspaceId = this.props.workspaceId;
     axios({
       method: 'get',
-      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
+      url: HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
       params: {
-        search_key: searchKey
+        search_key: searchKey,
+        all: true
       }
     }).then((response) => {
       if (response.data.is_success) {
@@ -48,33 +48,6 @@ class SelectTaskAssignedModal extends Component {
     })
   }
 
-  // // addMember(user_id) {
-  // //   let workspaceId = this.props.workspaceId;
-  // //   axios({
-  // //     method: 'post',
-  // //     url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/add_members',
-  // //     headers: {
-  // //       'auth-token': localStorage.getItem('authentication_token')
-  // //     },
-  // //     data: {
-  // //       user_ids: [user_id]
-  // //     }
-  // //   }).then((response) => {
-  // //     if (response.data.is_success) {
-  // //       this.setState({
-  // //         errorAddMember: ''
-  // //       })
-  // //       this.getAllMembers(this.state.searchKey.trim());
-  // //     } else {
-  // //       this.setState({
-  // //         errorAddMember: response.data.message
-  // //       })
-  // //     }
-  // //   }).catch((error) => {
-  // //     console.log(error);
-  // //   })
-  // // }
-
   onChangeSearchInput = (e) => {
     this.setState({
       searchKey: e.target.value
@@ -82,28 +55,37 @@ class SelectTaskAssignedModal extends Component {
 
     let searchKey = e.target.value.trim();
     this.getAllMembers(searchKey);
-    console.log(this.state);
   }
 
   render() {
     const ListUsers = ({allMembers}) => (
       <div className="list-users">
-        {allMembers.map((user, index) => (
-          <div key={index} className="member row clearfix">
+        {allMembers.map((member, index) => (
+          <div key={index}
+            className={this.props.assignedId === member.id ?
+              "member row clearfix active" : "member row clearfix"}
+            onClick={() => {
+              let fullName = member.first_name + " " + member.last_name;
+              this.props.getAssigned(member.id, fullName);
+              this.props.closeModal();
+            }}>
             <div className="avatar">
-              <img src={defaultAvatar} alt="Avatar" className="rounded-circle" />
+              <img src={defaultAvatar} alt="Avatar" />
             </div>
             <div>
               <div className="full-name">
-                <span>{user.first_name} </span>
-                <span>{user.last_name}</span>
+                <span>{member.first_name} </span>
+                <span>{member.last_name}</span>
               </div>
-              <div className="email text-dark-gray text-size-15p">{user.email}</div>
+              <div className="email text-dark-gray text-size-15p">{member.email}</div>
             </div>
-            <div className="ml-auto action">
-              <FontAwesomeIcon icon={faUserPlus}
-                className="fa-sm"/>
-            </div>
+            {
+              this.props.assignedId === member.id ?
+                <div className="ml-auto action">
+                  <FontAwesomeIcon icon={faCheck}
+                    className="fa-sm"/>
+                </div> : ""
+            }
           </div>
         ))}
       </div>
@@ -113,17 +95,17 @@ class SelectTaskAssignedModal extends Component {
       <Modal show={this.props.showModal}
         onHide={this.props.closeModal}
         dialogClassName="modal-50w"
-        className="add-member-modal modal-color"
+        className="select-task-assigned-modal modal-color"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton className="add-member-header">
           <Modal.Title className="text-bold">
-            Add members
+            Assign task to
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="search-user-input">
+          <div className="search-user-input-custom">
             <input type="text" placeholder="Enter a name or email"
               className={this.state.isFocusSearchInput ? "focus-input col-12" : "blur-input col-12"}
               value={this.state.searchKey}

@@ -18,7 +18,7 @@ import AccountSetting from '../account_setting/account_setting';
 import Dashboard from '../dashboard/dashboard';
 import PersonalWorksacpe from '../personal_workspace/personal_wokspace';
 import Workspace from '../workspace/workspace';
-import NewWorkspaceModal from '../modals/new_workspace_modal';
+import NewWorkspaceModal from '../modals/workspace/new_workspace_modal';
 
 class Main extends Component {
   constructor(props) {
@@ -130,7 +130,14 @@ class Main extends Component {
     const Workspaces = ({workspaces}) => (
       <div>
         {workspaces.map(workspace => (
-          <a href={"/workspace/" + workspace.id} className="list-group-item list-group-item-action light-color border-none pad-l-25p pad-r-15p active-hover" key={workspace.id}>
+          <a href={"/workspace/" + workspace.id}
+            className={
+              window.location.pathname.split('/').includes(workspace.id.toString())
+              && window.location.pathname.split('/').includes("workspace") ?
+              "list-group-item list-group-item-action light-color pad-l-25p active-hover active" :
+              "list-group-item list-group-item-action light-color pad-l-25p active-hover"
+            }
+            key={workspace.id}>
             <FontAwesomeIcon icon={faHashtag} className="light-color fa-bold" />
             {workspace.title}
           </a>
@@ -146,10 +153,21 @@ class Main extends Component {
             <a href="/dashboard" className="list-group-item list-group-item-action text-white border-none pad-l-15p pad-r-15p bold-text text-center">
               Better Team
             </a>
-            <a href="/dashboard" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
+            <a href="/dashboard"
+              className={
+                window.location.pathname.split("/").includes("dashboard") ?
+                "list-group-item list-group-item-action light-color bold-text active-hover active" :
+                "list-group-item list-group-item-action light-color bold-text active-hover"
+              }
+            >
               Dashboard
             </a>
-            <a href="/personal_workspace" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p bold-text active-hover">
+            <a href="/personal_workspace"
+              className={
+                window.location.pathname.split("/").includes("personal_workspace") ?
+                "list-group-item list-group-item-action light-color bold-text active-hover active" :
+                "list-group-item list-group-item-action light-color bold-text active-hover"
+              }>
               Your own workspace
             </a>
             <div className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p" onClick={() => {
@@ -162,7 +180,7 @@ class Main extends Component {
                 <span className="light-color">Add new workspace</span>
               </div>
             </div>
-            <div id="toggle-workspace-menu" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p active-hover" onClick={this.toggleListWorkSpace}>
+            <div id="toggle-workspace-menu" className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p" onClick={this.toggleListWorkSpace}>
               <span className="fa-pull-left pad-r-10p">
                 <FontAwesomeIcon icon={this.state.showListWorkSpace ? faAngleDown : faAngleRight} className="fal" />
               </span>

@@ -7,12 +7,12 @@ import '../../styles/dashboard.scss';
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
 
-import TaskEdittingModal from '../modals/task_editting_modal';
-import TaskCommentModal from '../modals/task_comment_modal';
-import DeleteTaskModal from '../modals/delete_task_modal';
-import NewWorkspaceModal from '../modals/new_workspace_modal';
-import WorkspaceDetailModal from '../modals/workspace_detail_modal';
-import JoinWorkspaceConfirmModal from '../modals/join_workspace_confirm_modal';
+import TaskEdittingModal from '../modals/task/task_editting_modal';
+import TaskCommentModal from '../modals/task/task_comment_modal';
+import ConfirmDeleteTaskModal from '../modals/task/confirm_delete_task_modal';
+import NewWorkspaceModal from '../modals/workspace/new_workspace_modal';
+import WorkspaceDetailModal from '../modals/workspace/workspace_detail_modal';
+import JoinWorkspaceConfirmModal from '../modals/workspace/join_workspace_confirm_modal';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -304,7 +304,7 @@ class Dashboard extends Component {
             showModalTaskComment: false
           })
         }}/>
-        <DeleteTaskModal showModal={this.state.showModalDeleteTask} closeModal={() => {
+        <ConfirmDeleteTaskModal showModal={this.state.showModalDeleteTask} closeModal={() => {
           this.setState({
             showModalDeleteTask: false
           })

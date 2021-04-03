@@ -2,14 +2,21 @@ import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faFilter, faFolder, faPlus, faEllipsisV, faSleigh } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
+import Pagination from "react-js-pagination";
 
-import * as myConstant from '../../constant';
+import {
+  HOST,
+  PENDING_STATUS_VALUE,
+  IN_PROGRESS_STATUS_VALUE,
+  FINISHED_STATUS_VALUE,
+  TASK_PER_PAGE
+} from "../../constant.js";
 
 import Task from './task';
-import WorkspaceSettingModal from '../modals/workspace_setting_modal';
-import AddMemberModal from '../modals/add_member_modal';
-import NewTaskModal from '../modals/new_task_modal';
-import TaskDetailModal from '../modals/task_detail_modal';
+import WorkspaceSettingModal from '../modals/workspace/workspace_setting_modal';
+import AddMemberModal from '../modals/workspace/add_member_modal';
+import NewTaskModal from '../modals/task/new_task_modal';
+import TaskDetailModal from '../modals/task/task_detail_modal';
 
 class Workspace extends Component {
   constructor(props) {
@@ -19,13 +26,14 @@ class Workspace extends Component {
     this.closeTaskDetailModal = this.closeTaskDetailModal.bind(this);
     this.openTaskDetailModal = this.openTaskDetailModal.bind(this);
     this.getListTaskByStatus = this.getListTaskByStatus.bind(this);
+    this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
     this.state = {
       isFocusSearchInput: false,
       showSettingWorkspace: false,
       showAddMemberModal: false,
       showNewTaskModal: false,
       showTaskDetailModal: {isShow: false, id: 0},
-      defaultNewTaskStatus: 'pending',
+      defaultNewTaskStatus: PENDING_STATUS_VALUE,
       pendingListTask: [],
       inProgressListTask: [],
       finishedListTask: [],
@@ -43,25 +51,26 @@ class Workspace extends Component {
   }
 
   componentDidMount() {
-    this.getListTaskByStatus('pending', 1);
-    this.getListTaskByStatus('in_progress', 1);
-    this.getListTaskByStatus('finished', 1);
+    this.getListTaskByStatus(PENDING_STATUS_VALUE, 1);
+    this.getListTaskByStatus(IN_PROGRESS_STATUS_VALUE, 1);
+    this.getListTaskByStatus(FINISHED_STATUS_VALUE, 1);
   }
 
-  getListTaskByStatus(status, page) {
+  getListTaskByStatus(status, page, searchText = '') {
     let workspaceId = this.props.match.params.id;
     axios({
       method: 'get',
-      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/' + status + '_tasks_list',
+      url: HOST + 'api/v1/workspace/' + workspaceId + '/' + status + '_tasks_list',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
       params: {
-        page: page
+        page: page,
+        search_text: searchText
       }
     }).then((response) => {
       if (response.data.is_success) {
-        if (status === 'pending') {
+        if (status === PENDING_STATUS_VALUE) {
           this.setState({
             pendingListTask: response.data.tasks_list,
             totalByStatus: {
@@ -70,7 +79,7 @@ class Workspace extends Component {
               finished: this.state.totalByStatus.finished
             }
           })
-        } else if (status === 'in_progress') {
+        } else if (status === IN_PROGRESS_STATUS_VALUE) {
           this.setState({
             inProgressListTask: response.data.tasks_list,
             totalByStatus: {
@@ -79,7 +88,7 @@ class Workspace extends Component {
               finished: this.state.totalByStatus.finished
             }
           })
-        } else if (status === 'finished') {
+        } else if (status === FINISHED_STATUS_VALUE) {
           this.setState({
             finishedListTask: response.data.tasks_list,
             totalByStatus: {
@@ -93,6 +102,12 @@ class Workspace extends Component {
     }).catch((error) => {
       console.log(error);
     })
+  }
+
+  onChangeSearchInput = (e) => {
+    this.getListTaskByStatus(PENDING_STATUS_VALUE, 1, e.target.value);
+    this.getListTaskByStatus(IN_PROGRESS_STATUS_VALUE, 1, e.target.value);
+    this.getListTaskByStatus(FINISHED_STATUS_VALUE, 1, e.target.value);
   }
 
   closeSettingWorkspace = () => {
@@ -131,6 +146,39 @@ class Workspace extends Component {
     })
   }
 
+  handlePageChangePending(pageNumber) {
+    this.setState({
+      pageByStatus: {
+        pending: pageNumber,
+        inProgress: this.state.pageByStatus.inProgress,
+        finished: this.state.pageByStatus.finished
+      }
+    });
+    this.getListTaskByStatus(PENDING_STATUS_VALUE, pageNumber);
+  }
+
+  handlePageChangeInPorgress(pageNumber) {
+    this.setState({
+      pageByStatus: {
+        pending: this.state.pageByStatus.pending,
+        inProgress: pageNumber,
+        finished: this.state.pageByStatus.finished
+      }
+    });
+    this.getListTaskByStatus(IN_PROGRESS_STATUS_VALUE, pageNumber);
+  }
+
+  handlePageChangeFinished(pageNumber) {
+    this.setState({
+      pageByStatus: {
+        pending: this.state.pageByStatus.pending,
+        inProgress: this.state.pageByStatus.inProgress,
+        finished: pageNumber
+      }
+    });
+    this.getListTaskByStatus(FINISHED_STATUS_VALUE, pageNumber);
+  }
+
   render() {
     return(
       <div className="row main-body">
@@ -141,7 +189,7 @@ class Workspace extends Component {
                 console.log(this.state)
                 this.setState({
                   showNewTaskModal: true,
-                  defaultNewTaskStatus: 'pending'
+                  defaultNewTaskStatus: PENDING_STATUS_VALUE
                 })
               }}>
               <FontAwesomeIcon icon={faPlus} className="fa-xs" />
@@ -149,7 +197,7 @@ class Workspace extends Component {
             </div>
             <div className={this.state.isFocusSearchInput ? "search-input focus-input" : "search-input blur-input"}>
               <FontAwesomeIcon icon={faFilter} className="fa-xs" />
-              <input type="text" placeholder="Type to filter task" className="mar-l-5p" 
+              <input type="text" placeholder="Type to filter task by task's title" className="mar-l-5p" 
                 onFocus={() => {
                   this.setState({
                     isFocusSearchInput: true
@@ -160,6 +208,7 @@ class Workspace extends Component {
                     isFocusSearchInput: false
                   })
                 }}
+                onChange={this.onChangeSearchInput}
               />
             </div>
             <div className="ml-auto row right-option">
@@ -201,14 +250,14 @@ class Workspace extends Component {
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>PENDING TASKS</span>
-                  <span className="total-task">1</span>
+                  <span className="total-task">{this.state.totalByStatus.pending}</span>
                 </div>
 
                 <div className="col-12 add-task-btn"
                   onClick={() => {
                     this.setState({
                       showNewTaskModal: true,
-                      defaultNewTaskStatus: 'pending'
+                      defaultNewTaskStatus: PENDING_STATUS_VALUE
                     })
                   }}>
                   <FontAwesomeIcon icon={faPlus} className="fa-xs" />
@@ -217,8 +266,23 @@ class Workspace extends Component {
 
                 {this.state.pendingListTask.map((task, index) => (
                   <Task key={index} task={task}
-                    openTaskDetailModal={this.openTaskDetailModal}/>
+                    openTaskDetailModal={this.openTaskDetailModal}
+                    updateListTask={this.getListTaskByStatus}/>
                 ))}
+                {
+                  this.state.totalByStatus.pending > TASK_PER_PAGE ?
+                    <div>
+                      <Pagination
+                        activePage={this.state.pageByStatus.pending}
+                        itemsCountPerPage={TASK_PER_PAGE}
+                        totalItemsCount={this.state.totalByStatus.pending}
+                        pageRangeDisplayed={5}
+                        prevPageText="prev"
+                        nextPageText="next"
+                        onChange={this.handlePageChangePending.bind(this)}
+                      />
+                    </div> : ""
+                }
               </div>
             </div>
 
@@ -226,14 +290,14 @@ class Workspace extends Component {
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>IN PROGRESS TASKS</span>
-                  <span className="total-task">1</span>
+                  <span className="total-task">{this.state.totalByStatus.inProgress}</span>
                 </div>
 
                 <div className="col-12 add-task-btn"
                   onClick={() => {
                     this.setState({
                       showNewTaskModal: true,
-                      defaultNewTaskStatus: 'in_progress'
+                      defaultNewTaskStatus: IN_PROGRESS_STATUS_VALUE
                     })
                   }}>
                   <FontAwesomeIcon icon={faPlus} className="fa-xs" />
@@ -242,8 +306,23 @@ class Workspace extends Component {
 
                 {this.state.inProgressListTask.map((task, index) => (
                   <Task key={index} task={task}
-                    openTaskDetailModal={this.openTaskDetailModal}/>
+                    openTaskDetailModal={this.openTaskDetailModal}
+                    updateListTask={this.getListTaskByStatus}/>
                 ))}
+                {
+                  this.state.totalByStatus.inProgress > TASK_PER_PAGE ?
+                    <div>
+                      <Pagination
+                        activePage={this.state.pageByStatus.inProgress}
+                        itemsCountPerPage={TASK_PER_PAGE}
+                        totalItemsCount={this.state.totalByStatus.inProgress}
+                        pageRangeDisplayed={5}
+                        prevPageText="prev"
+                        nextPageText="next"
+                        onChange={this.handlePageChangeInPorgress.bind(this)}
+                      />
+                    </div> : ""
+                }
               </div>
             </div>
 
@@ -251,13 +330,13 @@ class Workspace extends Component {
               <div className="list-task white-back-color bor-radius-5p shadow-box-div">
                 <div className="col-12 title">
                   <span>FINISHED TASKS</span>
-                  <span className="total-task">1</span>
+                  <span className="total-task">{this.state.totalByStatus.finished}</span>
                 </div>
                 <div className="col-12 add-task-btn"
                   onClick={() => {
                     this.setState({
                       showNewTaskModal: true,
-                      defaultNewTaskStatus: 'finished'
+                      defaultNewTaskStatus: FINISHED_STATUS_VALUE
                     })
                   }}>
                   <FontAwesomeIcon icon={faPlus} className="fa-xs" />
@@ -266,8 +345,23 @@ class Workspace extends Component {
 
                 {this.state.finishedListTask.map((task, index) => (
                   <Task className="dfer" key={index} task={task}
-                    openTaskDetailModal={this.openTaskDetailModal}/>
+                    openTaskDetailModal={this.openTaskDetailModal}
+                    updateListTask={this.getListTaskByStatus}/>
                 ))}
+                {
+                  this.state.totalByStatus.finished > TASK_PER_PAGE ?
+                    <div>
+                      <Pagination
+                        activePage={this.state.pageByStatus.finished}
+                        itemsCountPerPage={TASK_PER_PAGE}
+                        totalItemsCount={this.state.totalByStatus.finished}
+                        pageRangeDisplayed={5}
+                        prevPageText="prev"
+                        nextPageText="next"
+                        onChange={this.handlePageChangeFinished.bind(this)}
+                      />
+                    </div> : ""
+                }
               </div>
             </div>
           </div>
@@ -291,6 +385,7 @@ class Workspace extends Component {
           closeModal={this.closeTaskDetailModal}
           id={this.state.showTaskDetailModal.id}
           workspaceId={this.props.match.params.id}
+          updateListTask={this.getListTaskByStatus}
         />
       </div>
     );

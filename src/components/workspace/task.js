@@ -2,16 +2,53 @@ import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import {ProgressBar} from 'react-bootstrap';
+import axios from 'axios';
 
 import '../../styles/workspace.scss';
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
 
+import {
+  HOST
+} from "../../constant.js";
+
+import ConfirmDeteleTaskModal from '../modals/task/confirm_delete_task_modal';
+
 class Task extends Component {
   constructor(props) {
     super(props);
+    this.closeConfirmDeleteTaskModal = this.closeConfirmDeleteTaskModal.bind(this);
+    this.confirmDeteleTask = this.confirmDeteleTask.bind(this);
     this.state = {
+      showConfirmDeleteTaskModal: false
     }
+  }
+
+  closeConfirmDeleteTaskModal() {
+    this.setState({
+      showConfirmDeleteTaskModal: false
+    })
+  }
+
+  confirmDeteleTask() {
+    let taskId = this.props.task.id
+    axios({
+      method: 'post',
+      url: HOST + 'api/v1/task/' + taskId,
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+      data: {
+        status: 'deleted',
+      }
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.props.updateListTask(this.props.task.status, 1);
+        this.closeConfirmDeleteTaskModal();
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   render() {
@@ -32,10 +69,18 @@ class Task extends Component {
             <div className="dropdown">
               <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <span className="dropdown-item">Assign to</span>
-                <span className="dropdown-item">In progress</span>
-                <span className="dropdown-item">Done</span>
-                <span className="dropdown-item">Delete task</span>
+                <span className="dropdown-item"
+                  onClick={() => {
+                    this.props.openTaskDetailModal(this.props.task.id)
+                  }}  
+                >Setting</span>
+                <span className="dropdown-item"
+                  onClick={() => {
+                    this.setState({
+                      showConfirmDeleteTaskModal: true
+                    })
+                  }}
+                >Delete task</span>
               </div>
             </div>
           </div>  
@@ -55,7 +100,13 @@ class Task extends Component {
           <span className={"priority " + this.props.task.priority + " float-right"}>
             {this.props.task.priority}
           </span>
-        </div>               
+        </div>
+
+
+        <ConfirmDeteleTaskModal showModal={this.state.showConfirmDeleteTaskModal}
+          closeModal={this.closeConfirmDeleteTaskModal}
+          confirmDeteleTask={this.confirmDeteleTask}
+        />
       </div>
     );
   }

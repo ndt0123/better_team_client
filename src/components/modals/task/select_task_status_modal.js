@@ -5,7 +5,7 @@ import { faCheck, faCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { PENDING_STATUS_VALUE,
   IN_PROGRESS_STATUS_VALUE,
-  FINISHED_STATUS_VALUE } from '../../constant';
+  FINISHED_STATUS_VALUE } from '../../../constant';
 
 class SelectTaskStatusModal extends Component {
   constructor(props) {

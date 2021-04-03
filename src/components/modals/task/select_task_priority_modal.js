@@ -7,7 +7,7 @@ import {
   LOW_PRIORITY_VALUE,
   NORMAL_PRIORITY_VALUE,
   HIGH_PRIORITY_VALUE
-} from '../../constant';
+} from '../../../constant';
 
 class SelectTaskPriorityModal extends Component {
   constructor(props) {

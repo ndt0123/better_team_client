@@ -1,11 +1,16 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  } from "@fortawesome/free-solid-svg-icons";
 
-import * as myConstant from '../../constant';
-import defaultAvatar from '../../images/default-avatar.jpg';
+import {
+  HOST,
+  PENDING_STATUS_VALUE,
+  IN_PROGRESS_STATUS_VALUE,
+  FINISHED_STATUS_VALUE,
+  LOW_PRIORITY_VALUE,
+  NORMAL_PRIORITY_VALUE,
+  HIGH_PRIORITY_VALUE
+} from "../../../constant.js";
 
 class NewTaskModal extends Component {
   constructor(props) {
@@ -23,8 +28,8 @@ class NewTaskModal extends Component {
       title: {value: '', error: '', canSubmit: false},
       description: {value: '', error: '', canSubmit: false},
       assigned: {value: '', error: '', canSubmit: false},
-      priority: {value: 'low', error: '', canSubmit: false},
-      status: {value: 'new', error: '', canSubmit: false},
+      priority: {value: LOW_PRIORITY_VALUE, error: '', canSubmit: false},
+      status: {value: PENDING_STATUS_VALUE, error: '', canSubmit: false},
       dueDate: {value: '', error: '', canSubmit: false},
       errorValidateServer: ''
     }
@@ -49,7 +54,7 @@ class NewTaskModal extends Component {
     let workspaceId = this.props.workspaceId;
     axios({
       method: 'get',
-      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
+      url: HOST + 'api/v1/workspace/' + workspaceId + '/all_members',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
@@ -72,7 +77,7 @@ class NewTaskModal extends Component {
     console.log(workspaceId)
     axios({
       method: 'post',
-      url: myConstant.HOST + 'api/v1/workspace/' + workspaceId + '/new_task',
+      url: HOST + 'api/v1/workspace/' + workspaceId + '/new_task',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
@@ -91,8 +96,8 @@ class NewTaskModal extends Component {
           title: {value: '', error: '', canSubmit: false},
           description: {value: '', error: '', canSubmit: false},
           assigned: {value: '', error: '', canSubmit: false},
-          priority: {value: 'low', error: '', canSubmit: false},
-          status: {value: 'new', error: '', canSubmit: false},
+          priority: {value: LOW_PRIORITY_VALUE, error: '', canSubmit: false},
+          status: {value: PENDING_STATUS_VALUE, error: '', canSubmit: false},
           dueDate: {value: '', error: '', canSubmit: false},
           errorValidateServer: ''
         })
@@ -270,9 +275,9 @@ class NewTaskModal extends Component {
               <select className="form-control custom-input" id="priority"
                 value={this.state.priority.value}
                 onChange={this.onChangePriority}>
-                <option value="low">Low</option>
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
+                <option value={LOW_PRIORITY_VALUE}>Low</option>
+                <option value={NORMAL_PRIORITY_VALUE}>Normal</option>
+                <option value={HIGH_PRIORITY_VALUE}>High</option>
               </select>
             </div>
             <div className="form-group col-xs-12 col-sm-6">
@@ -280,9 +285,9 @@ class NewTaskModal extends Component {
               <select className="form-control custom-input" id="status"
                 value={this.state.status.value}
                 onChange={this.onChangeStatus}>
-                <option value="pending">Pending</option>
-                <option value="in_progress">In progress</option>
-                <option value="finished">Finished</option>
+                <option value={PENDING_STATUS_VALUE}>Pending</option>
+                <option value={IN_PROGRESS_STATUS_VALUE}>In progress</option>
+                <option value={FINISHED_STATUS_VALUE}>Finished</option>
               </select>
             </div>
           </div>

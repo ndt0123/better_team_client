@@ -8,3 +8,4 @@ export const FINISHED_STATUS_TEXT = 'Finished'
 export const LOW_PRIORITY_VALUE = 'low';
 export const NORMAL_PRIORITY_VALUE = 'normal';
 export const HIGH_PRIORITY_VALUE = 'high';
+export const TASK_PER_PAGE = 5;

@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-import '../../styles/constant.scss';
-
 class ConfirmRemoveMemberModal extends Component {
   render() {
     return(
