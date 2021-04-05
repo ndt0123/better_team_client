@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-class ConfirmDeteleTaskModal extends Component {
+class ConfirmFinishedModal extends Component {
   constructor(props) {
     super(props);
-    this.onClickDelete = this.onClickDelete.bind(this);
+    this.onClickConfirmBtn = this.onClickConfirmBtn.bind(this);
     this.state = {
     }
   }
 
-  onClickDelete() {
+  onClickConfirmBtn() {
     if (this.props.directAction) {
       let data = {
-        status: 'deleted'
+        status: 'finished'
       }
       this.props.updateTask(data);
       this.props.closeModal();
@@ -27,10 +27,10 @@ class ConfirmDeteleTaskModal extends Component {
           className="modal-color"
           aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title>Delete task</Modal.Title>
+            <Modal.Title>Mark as finished</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Are you sure want to delete this task?</p>
+            <p>Are you sure want to mark this task as finished?</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary"
@@ -41,8 +41,8 @@ class ConfirmDeteleTaskModal extends Component {
             <Button variant="primary"
               className="submit-btn-modal"
               type="submit"
-              onClick={this.onClickDelete}>
-              Delete
+              onClick={this.onClickConfirmBtn}>
+              OK
             </Button>
           </Modal.Footer>
         </Modal>
@@ -51,4 +51,4 @@ class ConfirmDeteleTaskModal extends Component {
   }
 }
 
-export default ConfirmDeteleTaskModal;
+export default ConfirmFinishedModal;

@@ -189,12 +189,29 @@
 
       .dropdown {
         .dropdown-menu {
-          width: 100px;
-          min-width: 100px;
-
-          span {
-            font-size: 14px;
-            color: #5e6772;
+          .action-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            color: #04b5ac;
+            pointer-events: auto;
+            width: 100%;
+            font-size: 15px;
+    
+            &:hover {
+              background-color: #04b5ac10;
+            }
+    
+            svg {
+              flex: none;
+              margin-right: 5px;
+              max-width: 18px;
+            }
+    
+            &.warning {
+              color: #9e3228;
+            }
           }
         }
       }
@@ -593,11 +610,55 @@ select#assigned {
       }
 
       .comment {
+        .input-comment {
+          border: 1px solid #ced4da;
+          border-radius: 5px;
+
+          textarea {
+            border: none;
+          }
+        }
 
       }
 
       .history {
+        .history-item {
+          padding-bottom: 15px;
 
+          span, svg {
+            color: #888c94;
+          }
+
+          .title-updated {
+            padding-bottom: 10px;
+
+            span {
+              font-weight: bold;
+            }
+
+            .updated-by {
+              color: #04b5ac;
+            }
+
+            svg {
+              color: #04b5ac;
+              margin-right: 5px;
+            }
+          }
+
+          .histories {
+            padding-left: 10px;
+            
+            svg {
+              font-size: 10px;
+              margin-right: 5px;
+            }
+
+            .value-before, .value-after {
+              color: #04b5ac;
+            }
+          }
+        }
       }
     }
 
@@ -613,7 +674,30 @@ select#assigned {
     }
   
     .right-side {
-  
+      .action-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        cursor: pointer;
+        color: #04b5ac;
+        pointer-events: auto;
+        width: 100%;
+        font-size: 15px;
+
+        &:hover {
+          background-color: #04b5ac10;
+        }
+
+        svg {
+          flex: none;
+          margin-right: 5px;
+          max-width: 18px;
+        }
+
+        &.warning {
+          color: #9e3228;
+        }
+      }
     }
   }
 }

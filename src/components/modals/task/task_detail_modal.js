@@ -2,15 +2,19 @@ import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArchive, faBalanceScaleRight, faChevronDown, faCircle, faMapMarkedAlt, faPaperPlane, faPencilAlt, faStream, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { ProgressBar } from 'react-bootstrap';
+import ActionCable from 'actioncable';
 
 import SelectTaskAssignedModal from './select_task_assigned_modal';
 import SelectTaskStatusModal from './select_task_status_modal';
 import SelectTaskPriorityModal from './select_task_priority_modal';
+import ConfirmDeteleTaskModal from './confirm_delete_task_modal';
+import ConfirmFinishedModal from './confirm_finished_modal';
 
 import {
   HOST,
+  WEB_SOCKET_HOST,
   PENDING_STATUS_VALUE,
   IN_PROGRESS_STATUS_VALUE,
   FINISHED_STATUS_VALUE,
@@ -42,10 +46,32 @@ class TaskDetailModal extends Component {
     this.onClickSaveButton = this.onClickSaveButton.bind(this);
     this.getNewPriority = this.getNewPriority.bind(this);
     this.getNewAssigned = this.getNewAssigned.bind(this);
+    this.updateTask = this.updateTask.bind(this);
+    this.closeConfirmDeteleTaskModal = this.closeConfirmDeteleTaskModal.bind(this);
+    this.closeConfirmFinishedModal = this.closeConfirmFinishedModal.bind(this);
+    this.onClickSendComment = this.onClickSendComment.bind(this);
+    this.connectwebsocket = this.connectwebsocket.bind(this);
     this.state = {
-      showAssignTaskModal: false,
-      showSelectTaskStatusModal: false,
-      showSelectTaskPriorityModal: false,
+      showAssignTaskModal: {
+        isShow: false,
+        directAction: false
+      },
+      showSelectTaskStatusModal: {
+        isShow: false,
+        directAction: false
+      },
+      showSelectTaskPriorityModal: {
+        isShow: false,
+        directAction: false
+      },
+      showConfirmDeteleTaskModal: {
+        isShow: false,
+        directAction: false
+      },
+      showConfirmFinishedModal: {
+        isShow: false,
+        directAction: false
+      },
       headerOption: 'detail',
       taskDetail: {},
       taskHistories: [],
@@ -58,14 +84,21 @@ class TaskDetailModal extends Component {
       status: {value: '', error: '', canSubmit: true},
       dueDate: {value: '', error: '', canSubmit: true},
       startDate: {value: '', error: '', canSubmit: true},
-      percentageCompleted: {value: 0, error: '', canSubmit: true}
+      percentageCompleted: {value: 0, error: '', canSubmit: true},
+      comments: [],
+      commentContent: ''
     }
+  }
+
+  componentDidMount() {
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.id !== prevProps.id) {
       this.getTaskDetail();
       this.getTaskHistories();
+      this.getTaskComments();
+      this.connectwebsocket();
     }
   }
 
@@ -121,7 +154,40 @@ class TaskDetailModal extends Component {
     })
   }
 
-  updateTask() {
+  getTaskComments() {
+    let taskId = this.props.id
+    axios({
+      method: 'get',
+      url: HOST + 'api/v1/task/' + taskId + '/comments',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      }
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.setState({
+          comments: response.data.comments
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  connectwebsocket() {
+    this.sub = this.props.cable.subscriptions.create({
+      channel: 'CommentChannel',
+      task_id: this.props.id
+    }, {
+      received: (data) => {
+        console.log(data)
+        this.setState({
+          comments: data.data
+        })
+      }
+    });
+  }
+
+  updateTask(data) {
     let taskId = this.props.id
     axios({
       method: 'post',
@@ -129,16 +195,7 @@ class TaskDetailModal extends Component {
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
-      data: {
-        title: this.state.title.value,
-        description: this.state.description.value,
-        assigned_user_id: this.state.assigned.value,
-        priority: this.state.priority.value,
-        status: this.state.status.value,
-        due_date: this.state.dueDate.value,
-        start_date: this.state.startDate.value,
-        percentage_completed: this.state.percentageCompleted.value
-      }
+      data: data
     }).then((response) => {
       if (response.data.is_success) {
         this.setState({
@@ -163,6 +220,7 @@ class TaskDetailModal extends Component {
         this.props.updateListTask(PENDING_STATUS_VALUE, 1);
         this.props.updateListTask(IN_PROGRESS_STATUS_VALUE, 1);
         this.props.updateListTask(FINISHED_STATUS_VALUE, 1);
+        this.getTaskHistories();
       } else {
         this.setState({
           errorTaskServer: response.data.message
@@ -176,7 +234,17 @@ class TaskDetailModal extends Component {
   onClickSaveButton() {
     if (this.state.title.canSubmit && this.state.description.canSubmit
       && this.state.startDate.canSubmit && this.state.dueDate.canSubmit) {
-      this.updateTask();
+      let data = {
+        title: this.state.title.value,
+        description: this.state.description.value,
+        assigned_user_id: this.state.assigned.value,
+        priority: this.state.priority.value,
+        status: this.state.status.value,
+        due_date: this.state.dueDate.value,
+        start_date: this.state.startDate.value,
+        percentage_completed: this.state.percentageCompleted.value
+      }
+      this.updateTask(data);
     }
   }
 
@@ -312,42 +380,96 @@ class TaskDetailModal extends Component {
   onClickAssignTo() {
     if (this.state.isEditTask) {
       this.setState({
-        showAssignTaskModal: true
+        showAssignTaskModal: {
+          isShow: true,
+          directAction: false
+        }
       })
     }
   }
 
   closeAssignTaskModal() {
     this.setState({
-      showAssignTaskModal: false
+      showAssignTaskModal: {
+        isShow: false,
+        directAction: false
+      }
     })
   }
 
   onClickStatus() {
     if (this.state.isEditTask) {
       this.setState({
-        showSelectTaskStatusModal: true
+        showSelectTaskStatusModal: {
+          isShow: true,
+          directAction: false
+        }
       })
     }
   }
 
   closeSelectTaskStatusModal() {
     this.setState({
-      showSelectTaskStatusModal: false
+      showSelectTaskStatusModal: {
+        isShow: false,
+        directAction: false
+      }
     })
   }
 
   onClickPriority() {
     if (this.state.isEditTask) {
       this.setState({
-        showSelectTaskPriorityModal: true
+        showSelectTaskPriorityModal: {
+          isShow: true,
+          directAction: false
+        }
       })
     }
   }
 
   closeSelectTaskPriorityModal() {
     this.setState({
-      showSelectTaskPriorityModal: false
+      showSelectTaskPriorityModal: {
+        isShow: false,
+        directAction: false
+      }
+    })
+  }
+
+  closeConfirmDeteleTaskModal() {
+    this.setState({
+      showConfirmDeteleTaskModal: {
+        isShow: false,
+        directAction: false
+      }
+    })
+  }
+
+  closeConfirmFinishedModal() {
+    this.setState({
+      showConfirmFinishedModal: {
+        isShow: false,
+        directAction: false
+      }
+    })
+  }
+
+  onClickSendComment() {
+    let taskId = this.props.id
+    axios({
+      method: 'post',
+      url: HOST + 'api/v1/task/' + taskId + '/comment',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      },
+      data: {
+        content: this.state.commentContent
+      }
+    }).then((response) => {
+      
+    }).catch((error) => {
+      console.log(error);
     })
   }
 
@@ -424,6 +546,7 @@ class TaskDetailModal extends Component {
         size="lg" 
         aria-labelledby="example-modal-sizes-title-lg"
         className="task-detail-modal"
+        scrollable={true}
       >
         <Modal.Header closeButton className="modal-header-custom">
           <Modal.Title>
@@ -586,9 +709,9 @@ class TaskDetailModal extends Component {
                       {
                         this.state.isEditTask ?
                           <div>
-                            <div class="form-group">
+                            <div className="form-group">
                               <input type="range" min="0" max="100"
-                                class="form-control-range"
+                                className="form-control-range"
                                 value={this.state.percentageCompleted.value}
                                 onChange={this.onChangePercentageCompleted} />
                             </div>
@@ -619,10 +742,10 @@ class TaskDetailModal extends Component {
 
                   <div className={this.state.isEditTask ? "col-12 display-block" : "col-12 display-none"}>
                     <button type="button" 
-                      class="submit-btn-modal float-right btn btn-primary"
+                      className="submit-btn-modal float-right btn btn-primary"
                       onClick={this.onClickSaveButton}>Save</button>
                     <button type="button"
-                      class="close-btn-modal float-right btn btn-secondary"
+                      className="close-btn-modal float-right btn btn-secondary"
                       onClick={() => {
                         this.setState({
                           isEditTask: false
@@ -631,39 +754,162 @@ class TaskDetailModal extends Component {
                   </div>
                 </div>
               </div>
+
               <div className={this.state.headerOption === 'comment' ? "display-block comment" : "display-none comment"}>
-                Comment
+                <div className="comments">
+                  {
+                    this.state.comments.map((comment, index) => (
+                    <div key={index}>{comment.content}</div>
+                    ))
+                  }
+                </div>
+                <div className="input-comment">
+                  <textarea type="text"
+                    className="form-control custom-input"
+                    placeholder="Type something to comment"
+                    rows={3}
+                    value={this.state.commentContent}
+                    onChange={(e) => {
+                      this.setState({
+                        commentContent: e.target.value
+                      })
+                    }}
+                  />
+                  <FontAwesomeIcon icon={faPaperPlane}
+                    className="fa-1x"
+                    onClick={this.onClickSendComment}/>
+                </div>
               </div>
+
               <div className={this.state.headerOption === 'history' ? "display-block history" : "display-none history"}>
                 {
                   this.state.taskHistories.map((history, index) => (
-                    <div key={index}>
-                      {history.updated_by}
+                    <div key={index} className="history-item">
+                      <div className="title-updated">
+                        <FontAwesomeIcon icon={faCircle} className="fa-xs" />
+                        <span>Updated by </span>
+                        <span className="updated-by">{history.updated_by} </span>
+                        <span className="updated-at">{history.updated_at} ago</span>
+                      </div>
+                      <div className="histories">
+                        {
+                          history.histories.map((his, index) => (
+                            <div key={index}>
+                              <FontAwesomeIcon icon={faCircle} className="fa-xs" />
+                              <span>{his.field} </span>
+                              <span>change from </span>
+                              <span className="value-before">{his.value_before} </span>
+                              <span>to </span>
+                              <span className="value-before">{his.value_after}</span>
+                            </div>
+                          ))
+                        }
+                      </div>
                     </div>
                   ))
                 }
               </div>
             </div>
             <div className="col-4 right-side">
-              Comment
+              <div className="action-item"
+                onClick={() => {
+                  this.setState({
+                    showAssignTaskModal: {
+                      isShow: true,
+                      directAction: true
+                    }
+                  })
+                }}>
+                <FontAwesomeIcon icon={faUser} className="fa-xs" />
+                <span>Assign to</span>
+              </div>
+              <div className="action-item"
+                onClick={() => {
+                  this.setState({
+                    showSelectTaskStatusModal: {
+                      isShow: true,
+                      directAction: true
+                    }
+                  })
+                }}>
+                <FontAwesomeIcon icon={faStream} className="fa-xs" />
+                <span>Change status</span>
+              </div>
+              <div className="action-item"
+                onClick={() => {
+                  this.setState({
+                    showSelectTaskPriorityModal: {
+                      isShow: true,
+                      directAction: true
+                    }
+                  })
+                }}>
+                <FontAwesomeIcon icon={faBalanceScaleRight} className="fa-xs" />
+                <span>Change priority</span>
+              </div>
+              <hr />
+              {
+                this.state.taskDetail.status !== 'finished' ?
+                  <div className="action-item warning"
+                    onClick={() => {
+                      this.setState({
+                        showConfirmFinishedModal: {
+                          isShow: true,
+                          directAction: true
+                        }
+                      })
+                    }}>
+                    <FontAwesomeIcon icon={faArchive} className="fa-xs" />
+                    <span>Move to finished</span>
+                  </div> : ""
+              }
+              <div className="action-item warning"
+                onClick={() => {
+                  this.setState({
+                    showConfirmDeteleTaskModal: {
+                      isShow: true,
+                      directAction: true
+                    }
+                  })
+                }}>
+                <FontAwesomeIcon icon={faTrashAlt} className="fa-xs" />
+                <span>Delete task</span>
+              </div>
             </div>
           </div>
 
-          <SelectTaskAssignedModal showModal={this.state.showAssignTaskModal}
+          <SelectTaskAssignedModal showModal={this.state.showAssignTaskModal.isShow}
             closeModal={this.closeAssignTaskModal}
             workspaceId={this.props.workspaceId}
             assignedId={this.state.assigned.value}
             getAssigned={this.getNewAssigned}
+            directAction={this.state.showAssignTaskModal.directAction}
+            updateTask={this.updateTask}
           />
-          <SelectTaskStatusModal showModal={this.state.showSelectTaskStatusModal}
+          <SelectTaskStatusModal showModal={this.state.showSelectTaskStatusModal.isShow}
             closeModal={this.closeSelectTaskStatusModal}
             status={this.state.status.value}
             getStatus={this.getNewStatus}
+            directAction={this.state.showSelectTaskStatusModal.directAction}
+            updateTask={this.updateTask}
           />
-          <SelectTaskPriorityModal showModal={this.state.showSelectTaskPriorityModal}
+          <SelectTaskPriorityModal showModal={this.state.showSelectTaskPriorityModal.isShow}
             closeModal={this.closeSelectTaskPriorityModal}
             priority={this.state.priority.value}
             getPriority={this.getNewPriority}
+            directAction={this.state.showSelectTaskPriorityModal.directAction}
+            updateTask={this.updateTask}
+          />
+          <ConfirmDeteleTaskModal showModal={this.state.showConfirmDeteleTaskModal.isShow}
+            closeModal={this.closeConfirmDeteleTaskModal}
+            closeTaskDetailModal={this.props.closeModal}
+            directAction={this.state.showConfirmDeteleTaskModal.directAction}
+            updateTask={this.updateTask}
+          />
+          <ConfirmFinishedModal showModal={this.state.showConfirmFinishedModal.isShow}
+            closeModal={this.closeConfirmFinishedModal}
+            directAction={this.state.showConfirmFinishedModal.directAction}
+            updateTask={this.updateTask}
           />
         </Modal.Body>
       </Modal>

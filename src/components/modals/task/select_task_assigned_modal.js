@@ -11,7 +11,7 @@ class SelectTaskAssignedModal extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
-    // this.addMember = this.addMember.bind(this);
+    this.onClickMember = this.onClickMember.bind(this);
     this.getAllMembers = this.getAllMembers.bind(this);
     this.state = {
       searchKey: '',
@@ -57,6 +57,19 @@ class SelectTaskAssignedModal extends Component {
     this.getAllMembers(searchKey);
   }
 
+  onClickMember(member) {
+    if (this.props.directAction) {
+      let data = {
+        assigned_user_id: member.id
+      }
+      this.props.updateTask(data);
+    } else {
+      let fullName = member.first_name + " " + member.last_name;
+      this.props.getAssigned(member.id, fullName);
+    }
+    this.props.closeModal();
+  }
+
   render() {
     const ListUsers = ({allMembers}) => (
       <div className="list-users">
@@ -65,9 +78,7 @@ class SelectTaskAssignedModal extends Component {
             className={this.props.assignedId === member.id ?
               "member row clearfix active" : "member row clearfix"}
             onClick={() => {
-              let fullName = member.first_name + " " + member.last_name;
-              this.props.getAssigned(member.id, fullName);
-              this.props.closeModal();
+              this.onClickMember(member);
             }}>
             <div className="avatar">
               <img src={defaultAvatar} alt="Avatar" />

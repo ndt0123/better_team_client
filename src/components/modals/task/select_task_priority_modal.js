@@ -16,6 +16,18 @@ class SelectTaskPriorityModal extends Component {
     }
   }
 
+  onClickPriority(priority) {
+    if (this.props.directAction) {
+      let data = {
+        priority: priority
+      }
+      this.props.updateTask(data);
+    } else {
+      this.props.getPriority(priority);
+    }
+    this.props.closeModal();
+  }
+
   render() {
     return(
       <Modal show={this.props.showModal}
@@ -34,8 +46,7 @@ class SelectTaskPriorityModal extends Component {
           <div
             className={this.props.priority === LOW_PRIORITY_VALUE ? "low list-priority active" : "low list-priority"}
             onClick={() => {
-              this.props.getPriority(LOW_PRIORITY_VALUE);
-              this.props.closeModal();
+              this.onClickPriority(LOW_PRIORITY_VALUE);
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm low-icon" />
             <span>Low</span>
@@ -48,8 +59,7 @@ class SelectTaskPriorityModal extends Component {
           <div
             className={this.props.priority === NORMAL_PRIORITY_VALUE ? "normal list-priority active" : "normal list-priority"}
             onClick={() => {
-              this.props.getPriority(NORMAL_PRIORITY_VALUE);
-              this.props.closeModal();
+              this.onClickPriority(NORMAL_PRIORITY_VALUE);
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm normal-icon" />
             <span>Normal</span>
@@ -62,8 +72,7 @@ class SelectTaskPriorityModal extends Component {
           <div
             className={this.props.priority === HIGH_PRIORITY_VALUE ? "high list-priority active" : "high list-priority"}
             onClick={() => {
-              this.props.getPriority(HIGH_PRIORITY_VALUE);
-              this.props.closeModal();
+              this.onClickPriority(HIGH_PRIORITY_VALUE);
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm high-icon" />
             <span>High</span>

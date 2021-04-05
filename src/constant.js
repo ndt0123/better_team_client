@@ -1,4 +1,5 @@
 export const HOST = "http://localhost:3000/";
+export const WEB_SOCKET_HOST = "ws://localhost:3000/";
 export const PENDING_STATUS_VALUE = 'pending';
 export const PENDING_STATUS_TEXT = 'Pending';
 export const IN_PROGRESS_STATUS_VALUE = 'in_progress';

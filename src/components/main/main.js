@@ -11,8 +11,11 @@ import { Navbar } from 'react-bootstrap'
 
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
-import * as myConstant from "../../constant.js";
 import defaultAvatar from '../../images/default-avatar.jpg';
+
+import {
+  HOST
+} from "../../constant.js";
 
 import AccountSetting from '../account_setting/account_setting';
 import Dashboard from '../dashboard/dashboard';
@@ -47,7 +50,7 @@ class Main extends Component {
   getAccountInfo() {
     axios({
       method: 'get',
-      url: myConstant.HOST + 'api/v1/account_info',
+      url: HOST + 'api/v1/account_info',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       },
@@ -65,7 +68,7 @@ class Main extends Component {
   getListWorkspaces() {
     axios({
       method: 'get',
-      url: myConstant.HOST + 'api/v1/user_list_workspace',
+      url: HOST + 'api/v1/user_list_workspace',
       headers: {
         'auth-token': localStorage.getItem('authentication_token')
       }
@@ -118,7 +121,7 @@ class Main extends Component {
 
   onClickLogOut = (event) => {
     event.preventDefault();
-    axios.delete(myConstant.HOST + "api/v1/sign_out")
+    axios.delete(HOST + "api/v1/sign_out")
     .then(response => {
       localStorage.removeItem('authentication_token');
       this.props.history.push('/sign_in');

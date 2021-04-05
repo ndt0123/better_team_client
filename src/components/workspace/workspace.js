@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faFilter, faFolder, faPlus, faEllipsisV, faSleigh } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
+import ActionCable from 'actioncable';
 
 import {
   HOST,
+  WEB_SOCKET_HOST,
   PENDING_STATUS_VALUE,
   IN_PROGRESS_STATUS_VALUE,
   FINISHED_STATUS_VALUE,
@@ -180,6 +182,8 @@ class Workspace extends Component {
   }
 
   render() {
+    const CABLE = ActionCable.createConsumer(WEB_SOCKET_HOST + 'cable');
+
     return(
       <div className="row main-body">
         <div className="col-12 pad-b-15p">
@@ -267,7 +271,8 @@ class Workspace extends Component {
                 {this.state.pendingListTask.map((task, index) => (
                   <Task key={index} task={task}
                     openTaskDetailModal={this.openTaskDetailModal}
-                    updateListTask={this.getListTaskByStatus}/>
+                    updateListTask={this.getListTaskByStatus}
+                    workspaceId={this.props.match.params.id}/>
                 ))}
                 {
                   this.state.totalByStatus.pending > TASK_PER_PAGE ?
@@ -307,7 +312,8 @@ class Workspace extends Component {
                 {this.state.inProgressListTask.map((task, index) => (
                   <Task key={index} task={task}
                     openTaskDetailModal={this.openTaskDetailModal}
-                    updateListTask={this.getListTaskByStatus}/>
+                    updateListTask={this.getListTaskByStatus}
+                    workspaceId={this.props.match.params.id}/>
                 ))}
                 {
                   this.state.totalByStatus.inProgress > TASK_PER_PAGE ?
@@ -346,7 +352,8 @@ class Workspace extends Component {
                 {this.state.finishedListTask.map((task, index) => (
                   <Task className="dfer" key={index} task={task}
                     openTaskDetailModal={this.openTaskDetailModal}
-                    updateListTask={this.getListTaskByStatus}/>
+                    updateListTask={this.getListTaskByStatus}
+                    workspaceId={this.props.match.params.id}/>
                 ))}
                 {
                   this.state.totalByStatus.finished > TASK_PER_PAGE ?
@@ -386,6 +393,7 @@ class Workspace extends Component {
           id={this.state.showTaskDetailModal.id}
           workspaceId={this.props.match.params.id}
           updateListTask={this.getListTaskByStatus}
+          cable={CABLE}
         />
       </div>
     );

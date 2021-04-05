@@ -14,6 +14,18 @@ class SelectTaskStatusModal extends Component {
     }
   }
 
+  onClickStatus(status) {
+    if (this.props.directAction) {
+      let data = {
+        status: status
+      }
+      this.props.updateTask(data);
+    } else {
+      this.props.getStatus(status);
+    }
+    this.props.closeModal();
+  }
+
   render() {
     return(
       <Modal show={this.props.showModal}
@@ -32,8 +44,7 @@ class SelectTaskStatusModal extends Component {
           <div
             className={this.props.status === PENDING_STATUS_VALUE ? "pending list-status active" : "pending list-status"}
             onClick={() => {
-              this.props.getStatus(PENDING_STATUS_VALUE);
-              this.props.closeModal();
+              this.onClickStatus(PENDING_STATUS_VALUE)
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm pending-icon" />
             <span>Pending</span>
@@ -46,8 +57,7 @@ class SelectTaskStatusModal extends Component {
           <div
             className={this.props.status === IN_PROGRESS_STATUS_VALUE ? "in-progress list-status active" : "in-progress list-status"}
             onClick={() => {
-              this.props.getStatus(IN_PROGRESS_STATUS_VALUE);
-              this.props.closeModal();
+              this.onClickStatus(IN_PROGRESS_STATUS_VALUE)
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm in_progress-icon" />
             <span>In Progress</span>
@@ -60,8 +70,7 @@ class SelectTaskStatusModal extends Component {
           <div
             className={this.props.status === FINISHED_STATUS_VALUE ? "finished list-status active" : "finished list-status"}
             onClick={() => {
-              this.props.getStatus(FINISHED_STATUS_VALUE);
-              this.props.closeModal();
+              this.onClickStatus(FINISHED_STATUS_VALUE)
             }}>
             <FontAwesomeIcon icon={faCircle} className="fa-sm finished-icon" />
             <span>Finished</span>
