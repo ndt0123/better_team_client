@@ -545,7 +545,8 @@ class TaskDetailModal extends Component {
         onHide={this.props.closeModal} 
         size="lg" 
         aria-labelledby="example-modal-sizes-title-lg"
-        className="task-detail-modal"
+        dialogClassName="custom-modal task-detail-modal"
+        bsClass="my-modal"
         scrollable={true}
       >
         <Modal.Header closeButton className="modal-header-custom">
@@ -759,7 +760,7 @@ class TaskDetailModal extends Component {
                 <div className="comments">
                   {
                     this.state.comments.map((comment, index) => (
-                    <div key={index}>{comment.content}</div>
+                      <div key={index}>{comment.content}</div>
                     ))
                   }
                 </div>

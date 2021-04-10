@@ -452,6 +452,12 @@ select#assigned {
 }
 
 .task-detail-modal {
+  &.custom-modal {
+    .modal-body {
+      overflow: hidden;
+    }
+  }
+
   .modal-title {
     width: 100%;
   }
@@ -610,9 +616,23 @@ select#assigned {
       }
 
       .comment {
+        .comments {
+          // height: 130px;
+          overflow: auto;
+          overflow: scroll;
+          height: 100%;
+          position: absolute;
+          width: calc(100% - 32px);
+          padding-bottom: 100px;
+        }
+
         .input-comment {
-          border: 1px solid #ced4da;
-          border-radius: 5px;
+          position: absolute;
+          background-color: gray;
+          width: calc(100% - 32px);
+          bottom: 0;
+          left: 0;
+          height: 100px;
 
           textarea {
             border: none;
