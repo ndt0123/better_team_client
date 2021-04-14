@@ -138,14 +138,15 @@ class AccountSetting extends Component {
           onHide={this.props.closeModal} 
           size="lg" 
           aria-labelledby="example-modal-sizes-title-lg"
+          className="account-setting-modal"
         >
           <Modal.Header closeButton>
             <Modal.Title>Account setting</Modal.Title>
           </Modal.Header>
           <form>
             <Modal.Body>
-              <div>
-                <img src={require('../../images/default-avatar.jpg')} alt="Avatar" />
+              <div className="avatar">
+                <img src={'/default-avatar.jpg'} alt="Avatar" className="rounded-circle" />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email address</label>

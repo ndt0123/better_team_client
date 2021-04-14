@@ -138,6 +138,10 @@
   padding-top: 56px !important;
 }
 
+.pad-t-0p {
+  padding-top: 0 !important;
+}
+
 .pad-lr-15p {
   padding-left: 15px !important;
   padding-right: 15px !important;
@@ -300,4 +304,8 @@
 
 .modal-color {
   background-color: #00000054 !important;
+}
+
+.display-flex {
+  display: flex;
 }

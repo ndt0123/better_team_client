@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArchive, faBalanceScaleRight, faChevronDown, faCircle, faMapMarkedAlt, faPaperPlane, faPencilAlt, faStream, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { ProgressBar } from 'react-bootstrap';
-import ActionCable from 'actioncable';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import SelectTaskAssignedModal from './select_task_assigned_modal';
 import SelectTaskStatusModal from './select_task_status_modal';
@@ -22,7 +22,6 @@ import {
   NORMAL_PRIORITY_VALUE,
   HIGH_PRIORITY_VALUE
 } from "../../../constant.js";
-import defaultAvatar from '../../../images/default-avatar.jpg';
 
 class TaskDetailModal extends Component {
   constructor(props) {
@@ -179,7 +178,6 @@ class TaskDetailModal extends Component {
       task_id: this.props.id
     }, {
       received: (data) => {
-        console.log(data)
         this.setState({
           comments: data.data
         })
@@ -346,6 +344,12 @@ class TaskDetailModal extends Component {
     })
   }
 
+  onChangeCommentInput = (e) => {
+    this.setState({
+      commentContent: e.target.value
+    })
+  }
+
   getNewStatus(status) {
     this.setState({
       status: {
@@ -457,20 +461,24 @@ class TaskDetailModal extends Component {
 
   onClickSendComment() {
     let taskId = this.props.id
-    axios({
-      method: 'post',
-      url: HOST + 'api/v1/task/' + taskId + '/comment',
-      headers: {
-        'auth-token': localStorage.getItem('authentication_token')
-      },
-      data: {
-        content: this.state.commentContent
-      }
-    }).then((response) => {
-      
-    }).catch((error) => {
-      console.log(error);
-    })
+    if (this.state.commentContent.trim() !== '') {
+      axios({
+        method: 'post',
+        url: HOST + 'api/v1/task/' + taskId + '/comment',
+        headers: {
+          'auth-token': localStorage.getItem('authentication_token')
+        },
+        data: {
+          content: this.state.commentContent
+        }
+      }).then((response) => {
+        this.setState({
+          commentContent: ''
+        })
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
   }
 
   getTaskStatus(status) {
@@ -615,7 +623,7 @@ class TaskDetailModal extends Component {
 
                 <div className="row">
                   <div className="col-12 custom-label assigned">
-                    <img src={defaultAvatar} alt="Avatar" className="avatar" />
+                    <img src={"/default-avatar.jpg"} alt="Avatar" className="avatar" />
                     <div className="wid-100per">
                       <h5>
                         Assigned to
@@ -649,13 +657,13 @@ class TaskDetailModal extends Component {
                     <div>
                       {
                         this.state.isEditTask ?
-                          <textarea type="text"
+                          <TextareaAutosize
                             className="form-control visible-input"
-                            rows={5}
+                            rows={3}
                             value={this.state.description.value}
                             onChange={this.onChangeDescription}
                           /> :
-                          <span>{this.state.taskDetail.description}</span>
+                          <span className="desc">{this.state.taskDetail.description}</span>
                       }
                     </div>
                     <span className="error-input-validate">{this.state.description.error}</span>
@@ -760,25 +768,34 @@ class TaskDetailModal extends Component {
                 <div className="comments">
                   {
                     this.state.comments.map((comment, index) => (
-                      <div key={index}>{comment.content}</div>
+                      <div key={index} className="comment-item">
+                        <div className="avatar">
+                          <img src={"/default-avatar.jpg"} alt="Avatar" />
+                        </div>
+                        <div className="comment-info">
+                          <div className="name-time">
+                            <span className="name">{comment.user_name} </span>
+                            <span className="time">{comment.time}</span>
+                          </div>
+                          <div className="content">
+                            <p>{comment.content}</p>
+                          </div>
+                        </div>
+                      </div>
                     ))
                   }
                 </div>
                 <div className="input-comment">
-                  <textarea type="text"
-                    className="form-control custom-input"
+                  <TextareaAutosize className="form-control custom-input"
                     placeholder="Type something to comment"
-                    rows={3}
                     value={this.state.commentContent}
-                    onChange={(e) => {
-                      this.setState({
-                        commentContent: e.target.value
-                      })
-                    }}
-                  />
-                  <FontAwesomeIcon icon={faPaperPlane}
-                    className="fa-1x"
-                    onClick={this.onClickSendComment}/>
+                    rows={2}
+                    onChange={this.onChangeCommentInput}/>
+                  <div className="submit-btn">
+                    <FontAwesomeIcon icon={faPaperPlane}
+                      className="fa-1x"
+                      onClick={this.onClickSendComment}/>
+                  </div>
                 </div>
               </div>
 

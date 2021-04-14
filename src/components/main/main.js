@@ -11,7 +11,6 @@ import { Navbar } from 'react-bootstrap'
 
 import '../../styles/main.scss';
 import '../../styles/constant.scss';
-import defaultAvatar from '../../images/default-avatar.jpg';
 
 import {
   HOST
@@ -223,7 +222,7 @@ class Main extends Component {
                   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <div className="user-info">
                       <div className="text-center info-avatar">
-                        <img src={defaultAvatar} alt="Avatar" />
+                        <img src={'/default-avatar.jpg'} alt="Avatar" />
                       </div>
                       <div className="text-center">
                         <span className="info-name">{this.state.fullName}</span>

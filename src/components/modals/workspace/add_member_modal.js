@@ -6,7 +6,6 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
 
 import * as myConstant from '../../../constant';
-import defaultAvatar from '../../../images/default-avatar.jpg';
 
 class AddMemberModal extends Component {
   constructor(props) {
@@ -90,7 +89,7 @@ class AddMemberModal extends Component {
         {allUsers.map((user, index) => (
           <div key={index} className="member row clearfix">
             <div className="avatar">
-              <img src={defaultAvatar} alt="Avatar" className="rounded-circle" />
+              <img src={"/default-avatar.jpg"} alt="Avatar" className="rounded-circle" />
             </div>
             <div>
               <div className="full-name">

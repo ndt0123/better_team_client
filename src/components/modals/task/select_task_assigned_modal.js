@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import { HOST } from '../../../constant';
-import defaultAvatar from '../../../images/default-avatar.jpg';
 
 class SelectTaskAssignedModal extends Component {
   constructor(props) {
@@ -81,7 +80,7 @@ class SelectTaskAssignedModal extends Component {
               this.onClickMember(member);
             }}>
             <div className="avatar">
-              <img src={defaultAvatar} alt="Avatar" />
+              <img src={"/default-avatar.jpg"} alt="Avatar" />
             </div>
             <div>
               <div className="full-name">

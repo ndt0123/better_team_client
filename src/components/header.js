@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import logo from '../images/logo.jpg';
 import '../styles/static_pages.scss';
 
 class Header extends Component {
@@ -11,7 +10,7 @@ class Header extends Component {
         <ul className="nav justify-content-end">
           <li className="nav-item mr-auto logo">
             <Link to = '/'>
-              <img src={logo} alt="logo" />
+              <img src={"/logo.jpg"} alt="logo" />
             </Link>
           </li>
           <li className="nav-item non-border-link">

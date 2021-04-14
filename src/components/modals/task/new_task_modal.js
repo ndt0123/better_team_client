@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import {
   HOST,
@@ -246,8 +247,10 @@ class NewTaskModal extends Component {
           </div>
           <div className="form-group mar-t-15p">
             <label htmlFor="description" className="text-bold text-dark-gray">Task's description</label>
-            <textarea type="text" className="form-control custom-input" id="description" placeholder="Enter task's description"
-              rows={5}
+            <TextareaAutosize className="form-control custom-input"
+              id="description"
+              placeholder="Enter task's description"
+              rows={3}
               value={this.state.description.value}
               onChange={this.onChangeDescription}
             />

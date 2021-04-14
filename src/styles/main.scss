@@ -228,6 +228,20 @@ body, html {
   }
 }
 
+.account-setting-modal {
+  .avatar {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-image: linear-gradient(to bottom right, #83a4d4, #b6fbff);
+
+    img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+}
+
 ///////////////////////
 
 @media (min-width: 768px) {

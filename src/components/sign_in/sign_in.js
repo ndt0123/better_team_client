@@ -73,13 +73,13 @@ class SignIn extends Component {
                   <div className="sign-up-div">
                     <Link to = "/sign_up">Sign up</Link>
                   </div>
-                  <hr className="my-4" />
+                  {/* <hr className="my-4" />
                   <button className="btn btn-lg btn-google btn-block text-uppercase">
                     <FontAwesomeIcon icon={faGoogle} className="login-icon-btn" />  Sign in with Google
                   </button>
                   <button className="btn btn-lg btn-facebook btn-block text-uppercase">
                     <FontAwesomeIcon icon={faFacebookF} className="login-icon-btn" />  Sign in with Facebook
-                  </button>
+                  </button> */}
                 </form>
               </div>
             </div>
