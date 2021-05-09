@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faPlus, faEllipsisV, faPaperPlane, faUserPlus, faCogs, faTasks, faComments } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faPlus, faEllipsisV, faPaperPlane, faUserPlus, faCogs, faTasks, faComments, faOutdent } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
 import ActionCable from 'actioncable';
@@ -20,6 +20,7 @@ import WorkspaceSettingModal from '../modals/workspace/workspace_setting_modal';
 import AddMemberModal from '../modals/workspace/add_member_modal';
 import NewTaskModal from '../modals/task/new_task_modal';
 import TaskDetailModal from '../modals/task/task_detail_modal';
+import ConfirmLeaveWorkspaceModal from '../modals/workspace/confirm_leave_workspace_modal';
 
 const CABLE = ActionCable.createConsumer(WEB_SOCKET_HOST + 'cable');
 
@@ -34,6 +35,8 @@ class Workspace extends Component {
     this.onChangeSearchInput = this.onChangeSearchInput.bind(this);
     this.onClickSendMessage = this.onClickSendMessage.bind(this);
     this.connectwebsocket = this.connectwebsocket.bind(this);
+    this.confirmLeaveWorkspace = this.confirmLeaveWorkspace.bind(this);
+
     this.state = {
       isFocusSearchInput: false,
       isShowTaskList: true,
@@ -41,6 +44,7 @@ class Workspace extends Component {
       showAddMemberModal: false,
       showNewTaskModal: false,
       showTaskDetailModal: {isShow: false, id: 0},
+      showConfirmLeaveWorkspaceModal: false,
       defaultNewTaskStatus: PENDING_STATUS_VALUE,
       pendingListTask: [],
       inProgressListTask: [],
@@ -63,14 +67,15 @@ class Workspace extends Component {
   componentDidMount() {
     let workspaceId = this.props.match.params.id;
 
-    this.getListTaskByStatus(workspaceId, PENDING_STATUS_VALUE, 1);
-    this.getListTaskByStatus(workspaceId, IN_PROGRESS_STATUS_VALUE, 1);
-    this.getListTaskByStatus(workspaceId, FINISHED_STATUS_VALUE, 1);
+    this.getListTaskByStatus(PENDING_STATUS_VALUE, 1);
+    this.getListTaskByStatus(IN_PROGRESS_STATUS_VALUE, 1);
+    this.getListTaskByStatus(FINISHED_STATUS_VALUE, 1);
     this.getMessages(workspaceId);
     this.connectwebsocket(workspaceId);
   }
 
-  getListTaskByStatus(workspaceId, status, page, searchText = '') {
+  getListTaskByStatus(status, page, searchText = '') {
+    let workspaceId = this.props.match.params.id;
     axios({
       method: 'get',
       url: HOST + 'api/v1/workspace/' + workspaceId + '/' + status + '_tasks_list',
@@ -203,6 +208,12 @@ class Workspace extends Component {
     })
   }
 
+  closeConfirmLeaveWorkspaceModal = () => {
+    this.setState({
+      showConfirmLeaveWorkspaceModal: false
+    })
+  }
+
   openTaskDetailModal = (task_id) => {
     this.setState({
       showTaskDetailModal: {
@@ -245,11 +256,32 @@ class Workspace extends Component {
     this.getListTaskByStatus(FINISHED_STATUS_VALUE, pageNumber);
   }
 
+  confirmLeaveWorkspace() {
+    let workspaceId = this.props.match.params.id;
+    axios({
+      method: 'post',
+      url: HOST + 'api/v1/workspace/' + workspaceId + '/leave_workspace',
+      headers: {
+        'auth-token': localStorage.getItem('authentication_token')
+      }
+    }).then((response) => {
+      if (response.data.is_success) {
+        this.props.history.push('/');
+        this.props.updateListWorkspaces();
+        this.setState({
+          showConfirmLeaveWorkspaceModal: false
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
   render() {
     return(
       <div className="row main-body pad-t-0p">
-        <div className="col-12 header">
-          <div className={this.state.isShowTaskList ? "tasks option-btn active": "tasks option-btn"}
+        <div className={this.props.showSidebar ? "col-12 header show-sidebar" : "col-12 header"}>
+          <div className={this.state.isShowTaskList ? "tasks option-btn active float-left": "tasks option-btn float-left"}
             onClick={() => {
               this.setState({
                 isShowTaskList: true
@@ -258,7 +290,8 @@ class Workspace extends Component {
             <FontAwesomeIcon icon={faTasks} className="fa-xs" />
             <span>Tasks</span>
           </div>
-          <div className={this.state.isShowTaskList ? "message option-btn": "message option-btn active"}
+
+          <div className={this.state.isShowTaskList ? "message option-btn float-left": "message option-btn active float-left"}
             onClick={() => {
               this.setState({
                 isShowTaskList: false
@@ -266,6 +299,47 @@ class Workspace extends Component {
             }}>
             <FontAwesomeIcon icon={faComments} className="fa-xs" />
             <span>Message</span>
+          </div>
+
+          <div className="btn mar-r-15p pad-0p box-menu-icon float-right">
+            <div className="dropdown menu-icon">
+              <div id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray"/>
+              </div>
+              <div className="dropdown-menu dropdown-menu-right"
+                aria-labelledby="dropdownMenuButton">
+
+                <div className="action-item dropdown-item"
+                  onClick={() => {
+                    this.setState({
+                      showAddMemberModal: true
+                    })
+                  }}>
+                  <FontAwesomeIcon icon={faUserPlus} className="fa-xs" />
+                  <span>Add members</span>
+                </div>
+
+                <div className="action-item dropdown-item"
+                  onClick={() => {
+                    this.setState({
+                      showSettingWorkspace: true
+                    })
+                  }}>
+                  <FontAwesomeIcon icon={faCogs} className="fa-xs" />
+                  <span>Setting</span>
+                </div>
+
+                <div className="action-item dropdown-item warning"
+                  onClick={() => {
+                    this.setState({
+                      showConfirmLeaveWorkspaceModal: true
+                    })
+                  }}>
+                  <FontAwesomeIcon icon={faOutdent} className="fa-xs" />
+                  <span>Leave workspace</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -299,37 +373,6 @@ class Workspace extends Component {
                     }}
                     onChange={this.onChangeSearchInput}
                   />
-                </div>
-
-                <div className="btn mar-r-15p pad-0p">
-                  <div className="dropdown">
-                    <div id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                      <FontAwesomeIcon icon={faEllipsisV} className="fa-x1 text-gray"/>
-                    </div>
-                    <div className="dropdown-menu dropdown-menu-right"
-                      aria-labelledby="dropdownMenuButton">
-
-                      <div className="action-item dropdown-item"
-                        onClick={() => {
-                          this.setState({
-                            showAddMemberModal: true
-                          })
-                        }}>
-                        <FontAwesomeIcon icon={faUserPlus} className="fa-xs" />
-                        <span>Add members</span>
-                      </div>
-
-                      <div className="action-item dropdown-item"
-                        onClick={() => {
-                          this.setState({
-                            showSettingWorkspace: true
-                          })
-                        }}>
-                        <FontAwesomeIcon icon={faCogs} className="fa-xs" />
-                        <span>Setting</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -481,7 +524,7 @@ class Workspace extends Component {
               </div>
 
               <div className="col-12 box-input-message">
-                <div className="input-message float-right">
+                <div className={this.props.showSidebar ? "input-message float-right show-sidebar" : "input-message float-right"}>
                   <TextareaAutosize
                     className="form-control"
                     placeholder="Type message here"
@@ -523,6 +566,10 @@ class Workspace extends Component {
           workspaceId={this.props.match.params.id}
           updateListTask={this.getListTaskByStatus}
           cable={CABLE}
+        />
+        <ConfirmLeaveWorkspaceModal showModal={this.state.showConfirmLeaveWorkspaceModal}
+          closeModal={this.closeConfirmLeaveWorkspaceModal}
+          confirmLeaveWorkspace={this.confirmLeaveWorkspace}
         />
       </div>
     );

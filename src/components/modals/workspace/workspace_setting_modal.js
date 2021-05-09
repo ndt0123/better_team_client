@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
 import ReactTooltip from "react-tooltip";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import * as myConstant from '../../../constant';
 
@@ -321,8 +322,11 @@ class WorkspaceSettingModal extends Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="description" className="text-bold">Description</label>
-                  <input type="text" className="form-control custom-input" id="description"  placeholder="Type something to describe your workspace" 
-                    value={this.state.description.value} 
+                  <TextareaAutosize
+                    className="form-control custom-input"
+                    id="description"
+                    placeholder="Type something to describe your workspace"
+                    value={this.state.description.value}
                     onChange={this.onChangeDescription}
                   />
                   <span className="text-dark-gray text-size-15p">What’s this workspace about?</span>

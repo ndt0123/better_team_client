@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import * as myConstant from '../../../constant';
 
@@ -151,8 +152,12 @@ class NewWorkspaceModal extends Component {
               </div>
               <div className="form-group">
                 <label htmlFor="description" className="text-bold">Description</label>
-                <input type="text" className="form-control custom-input" id="description"  placeholder="Type something to describe your workspace" 
-                  value={this.state.description.value} 
+                <TextareaAutosize
+                  className="form-control custom-input"
+                  id="description"
+                  placeholder="Type something to describe your workspace"
+                  rows={3}
+                  value={this.state.description.value}
                   onChange={this.onChangeDescription}
                 />
                 <span className="text-dark-gray text-size-15p">What’s this workspace about?</span>

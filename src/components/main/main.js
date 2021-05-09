@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleRight, faBars, faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleRight, faBars, faCogs, faHashtag, faPlus, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import {
   BrowserRouter as Router,
@@ -21,6 +21,7 @@ import Dashboard from '../dashboard/dashboard';
 import PersonalWorksacpe from '../personal_workspace/personal_wokspace';
 import Workspace from '../workspace/workspace';
 import NewWorkspaceModal from '../modals/workspace/new_workspace_modal';
+import SearchingModal from '../modals/workspace/searching_modal';
 
 class Main extends Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class Main extends Component {
     this.closeModalNewWorkspace = this.closeModalNewWorkspace.bind(this);
     this.closeModalAccountSetting = this.closeModalAccountSetting.bind(this);
     this.updateNameAndEmail = this.updateNameAndEmail.bind(this);
+    this.closeSearchingModal = this.closeSearchingModal.bind(this);
 
     this.state = {
       showSidebar: true,
@@ -37,7 +39,8 @@ class Main extends Component {
       showNewWorkspaceModal: false,
       workspaces: [],
       accountInfo: {},
-      fullName: ''
+      fullName: '',
+      showSearchingModal: false
     }
   }
 
@@ -115,6 +118,12 @@ class Main extends Component {
   closeModalNewWorkspace = () => {
     this.setState({
       showNewWorkspaceModal: false
+    })
+  }
+
+  closeSearchingModal = () => {
+    this.setState({
+      showSearchingModal: false
     })
   }
 
@@ -197,27 +206,29 @@ class Main extends Component {
         </div>
         <div id="page-content-wrapper">
           <Navbar className={this.state.showSidebar ? "box-navbar" : "box-navbar toggled"} bg="light" expand="lg" fixed="top">
-            <div id="menu-toggle" onClick={this.toggleMenu}>
+            <div id="menu-toggle"
+              className="col-4 pad-0p"
+              onClick={this.toggleMenu}>
               <FontAwesomeIcon icon={faBars} className="fa-lg" />
             </div>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
 
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <div className="col-4">
+              <div className="input-div"
+                onClick={() => {
+                  this.setState({
+                    showSearchingModal: true
+                  })
+                }}>
+                <span>Type to search</span>
+              </div>
+            </div>
+
+            <div className="collapse navbar-collapse col-4 pad-0p"
+              id="navbarSupportedContent">
               <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-                <li className="nav-item active">
-                  <a className="nav-link white-color" href="#">
-                    Home
-                    <span className="sr-only">(current)</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link white-color" href="#">Link</a>
-                </li>
                 <li className="nav-item dropdown account-setting">
                   <a className="nav-link dropdown-toggle white-color" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Account
+                    {this.state.fullName}
                   </a>
                   <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <div className="user-info">
@@ -231,8 +242,16 @@ class Main extends Component {
                       </div>
                     </div>
                     <div className="dropdown-divider"></div>
-                    <span className="dropdown-item hover-cursor-pointer" onClick={this.toggleModalAccountSetting}>Account setting</span>
-                    <span className="dropdown-item hover-cursor-pointer" onClick={this.onClickLogOut}>Log out</span>
+                    <div className="action-item dropdown-item"
+                      onClick={this.toggleModalAccountSetting}>
+                      <FontAwesomeIcon icon={faCogs} className="fa-xs" />
+                      <span>Account setting</span>
+                    </div>
+                    <div className="action-item dropdown-item"
+                      onClick={this.onClickLogOut}>
+                      <FontAwesomeIcon icon={faSignOutAlt} className="fa-xs" />
+                      <span>Log out</span>
+                    </div>
                   </div>
                 </li>
               </ul>
@@ -243,7 +262,12 @@ class Main extends Component {
                 <Route path='/' component={Dashboard} exact />
                 <Route path='/dashboard' component={Dashboard} />
                 <Route path='/personal_workspace' component={PersonalWorksacpe} />
-                <Route path='/workspace/:id' component={Workspace} />
+                <Route path='/workspace/:id'
+                  component={(props) => (
+                    <Workspace {...props}
+                      updateListWorkspaces={this.getListWorkspaces}
+                      showSidebar={this.state.showSidebar} />
+                  )} />
             </Router>
           </div>
         </div>
@@ -256,6 +280,9 @@ class Main extends Component {
         <NewWorkspaceModal showModal={this.state.showNewWorkspaceModal}
           closeModal={this.closeModalNewWorkspace}
           updateListWorkspaces={this.getListWorkspaces}
+        />
+        <SearchingModal showModal={this.state.showSearchingModal}
+          closeModal={this.closeSearchingModal}
         />
       </div>
     );
