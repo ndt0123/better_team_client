@@ -8,8 +8,6 @@ import {
   HOST
 } from "../../../constant";
 
-const MAX_TITLE_LENGTH = 40;
-
 class WorkspaceDetailModal extends Component {
   constructor(props) {
     super(props);
@@ -69,6 +67,9 @@ class WorkspaceDetailModal extends Component {
       }
     }).then((response) => {
       if(response.data.is_success) {
+        this.props.getListWorkspaces();
+        this.props.closeModal();
+        this.props.closeSearchingModal();
       } else {
         this.setState({
           errorPrivateKey: response.data.message

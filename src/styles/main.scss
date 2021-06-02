@@ -107,7 +107,7 @@ body, html {
   -o-transition: margin .25s ease-out;
   transition: margin .25s ease-out;
   background-color: #f3f3f3b8;
-  height: 100%;
+  height: calc(100% - 56px);
 }
 
 .box-main-body.toggled {
@@ -394,6 +394,10 @@ body, html {
 
           .workspace {
             .result {
+              a {
+                text-decoration: none;
+              }
+
               &:hover {
                 cursor: pointer;
                 background-color: cadetblue;
@@ -418,6 +422,11 @@ body, html {
 
               .title {
                 font-weight: bold;
+                color: #212529;
+              }
+
+              svg {
+                color: #212529;
               }
 
               .description {

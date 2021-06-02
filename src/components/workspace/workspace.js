@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faPlus, faEllipsisV, faPaperPlane, faUserPlus, faCogs, faTasks, faComments, faOutdent } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faPlus, faEllipsisV, faUserPlus, faCogs, faTasks, faComments, faOutdent } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
 import Pagination from "react-js-pagination";
 import ActionCable from 'actioncable';
-import TextareaAutosize from 'react-autosize-textarea';
 
 import {
   HOST,
@@ -21,6 +20,7 @@ import AddMemberModal from '../modals/workspace/add_member_modal';
 import NewTaskModal from '../modals/task/new_task_modal';
 import TaskDetailModal from '../modals/task/task_detail_modal';
 import ConfirmLeaveWorkspaceModal from '../modals/workspace/confirm_leave_workspace_modal';
+import Messages from './messages';
 
 const CABLE = ActionCable.createConsumer(WEB_SOCKET_HOST + 'cable');
 
@@ -36,6 +36,7 @@ class Workspace extends Component {
     this.onClickSendMessage = this.onClickSendMessage.bind(this);
     this.connectwebsocket = this.connectwebsocket.bind(this);
     this.confirmLeaveWorkspace = this.confirmLeaveWorkspace.bind(this);
+    this.onClickSendReplyMessage = this.onClickSendReplyMessage.bind(this);
 
     this.state = {
       isFocusSearchInput: false,
@@ -59,8 +60,7 @@ class Workspace extends Component {
         inProgress: 0,
         finished: 0
       },
-      messages: [],
-      messageContent: ''
+      messages: []
     }
   }
 
@@ -128,6 +128,7 @@ class Workspace extends Component {
       workspace_id: workspaceId
     }, {
       received: (data) => {
+        console.log(data)
         this.setState({
           messages: data.data
         })
@@ -153,9 +154,9 @@ class Workspace extends Component {
     })
   }
 
-  onClickSendMessage() {
+  onClickSendMessage(messageContent) {
     let workspaceId = this.props.match.params.id;
-    if (this.state.messageContent.trim() !== '') {
+    if (messageContent.trim() !== '') {
       axios({
         method: 'post',
         url: HOST + 'api/v1/workspace/' + workspaceId + '/message',
@@ -163,12 +164,29 @@ class Workspace extends Component {
           'auth-token': localStorage.getItem('authentication_token')
         },
         data: {
-          content: this.state.messageContent
+          content: messageContent
         }
       }).then((response) => {
-        this.setState({
-          messageContent: ''
-        })
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+  }
+
+  onClickSendReplyMessage(message_id, content) {
+    let workspaceId = this.props.match.params.id;
+    if (content.trim() !== '') {
+      axios({
+        method: 'post',
+        url: HOST + 'api/v1/workspace/' + workspaceId + '/create_reply_message',
+        headers: {
+          'auth-token': localStorage.getItem('authentication_token')
+        },
+        data: {
+          content: content,
+          message_id: message_id
+        }
+      }).then((response) => {
       }).catch((error) => {
         console.log(error);
       })
@@ -279,8 +297,8 @@ class Workspace extends Component {
 
   render() {
     return(
-      <div className="row main-body pad-t-0p">
-        <div className={this.props.showSidebar ? "col-12 header show-sidebar" : "col-12 header"}>
+      <div className="main-body pad-t-0p">
+        <div className="col-12 header">
           <div className={this.state.isShowTaskList ? "tasks option-btn active float-left": "tasks option-btn float-left"}
             onClick={() => {
               this.setState({
@@ -501,49 +519,9 @@ class Workspace extends Component {
               </div>
             </div> :
 
-            <div className="col-12 box-message">
-              <div className="messages">
-                {
-                  this.state.messages.map((message, index) => (
-                    <div key={index} className="message-item">
-                      <div className="avatar">
-                        <img src={"/default-avatar.jpg"} alt="Avatar" />
-                      </div>
-                      <div className="message-info">
-                        <div className="name-time">
-                          <span className="name">{message.user_name} </span>
-                          <span className="time">{message.time}</span>
-                        </div>
-                        <div className="content">
-                          <p>{message.content}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                }
-              </div>
-
-              <div className="col-12 box-input-message">
-                <div className={this.props.showSidebar ? "input-message float-right show-sidebar" : "input-message float-right"}>
-                  <TextareaAutosize
-                    className="form-control"
-                    placeholder="Type message here"
-                    rows={1}
-                    value={this.state.messageContent}
-                    onChange={(e) => {
-                      this.setState({
-                        messageContent: e.target.value
-                      })
-                    }}
-                  />
-                  <div className="submit-btn"
-                    onClick={this.onClickSendMessage}>
-                    <FontAwesomeIcon icon={faPaperPlane}
-                      className="fa-1x"/>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Messages messages={this.state.messages}
+              onClickSendMessage={this.onClickSendMessage}
+              onClickSendReplyMessage={this.onClickSendReplyMessage}/>
         }
 
         <WorkspaceSettingModal showModal={this.state.showSettingWorkspace}

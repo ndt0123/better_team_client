@@ -3,7 +3,6 @@ import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBoxes, faCheck, faComments, faHashtag, faLock, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
-import { Redirect } from "react-router-dom";
 
 import {
   HOST
@@ -137,6 +136,19 @@ class SearchingModal extends Component {
                     <div className="workspace list-items">
                       {
                         this.state.workspaceResults.map((workspace, index) => (
+                          workspace.belong_workspace ?
+                          <div className="result" key={index}>
+                            <a  href={"/workspace/" + workspace.id} key={index}>
+                              {
+                                workspace.is_private ?
+                                  <FontAwesomeIcon icon={faLock} className="fa-xs private-icon"/> :
+                                  <FontAwesomeIcon icon={faHashtag} className="fa-xs private-icon"/>
+                              }
+                              <span className="title">{workspace.title}</span>
+                              <span className="description"> - {workspace.description}</span>
+                              <FontAwesomeIcon icon={faCheck} className="fa-xs float-right check-icon"/>
+                            </a>
+                          </div> :
                           <div className="result"
                             key={index}
                             onClick={() => {
@@ -144,18 +156,11 @@ class SearchingModal extends Component {
                             }}>
                             {
                               workspace.is_private ?
-                                <FontAwesomeIcon icon={faLock} className="fa-xs"
-                                className="private-icon"/> :
-                                <FontAwesomeIcon icon={faHashtag} className="fa-xs"
-                                className="private-icon"/>
+                                <FontAwesomeIcon icon={faLock} className="fa-xs private-icon"/> :
+                                <FontAwesomeIcon icon={faHashtag} className="fa-xs private-icon"/>
                             }
                             <span className="title">{workspace.title}</span>
                             <span className="description"> - {workspace.description}</span>
-                            {
-                              workspace.belong_workspace ?
-                                <FontAwesomeIcon icon={faCheck} className="fa-xs"
-                                className="float-right check-icon"/> : ""
-                            }
                           </div>
                         ))
                       }
@@ -182,6 +187,8 @@ class SearchingModal extends Component {
         <WorkspaceDetailModal showModal={this.state.showWorkspaceDetailModal.isShow}
           closeModal={this.closeWorkspaceDetailModal}
           workspaceId={this.state.showWorkspaceDetailModal.id}
+          getListWorkspaces={this.props.getListWorkspaces}
+          closeSearchingModal={this.props.closeModal}
         />
       </div>
     );

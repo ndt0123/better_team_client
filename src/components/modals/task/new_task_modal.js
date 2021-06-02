@@ -75,7 +75,6 @@ class NewTaskModal extends Component {
 
   createNewTask() {
     let workspaceId = this.props.workspaceId;
-    console.log(workspaceId)
     axios({
       method: 'post',
       url: HOST + 'api/v1/workspace/' + workspaceId + '/new_task',

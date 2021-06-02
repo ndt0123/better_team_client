@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArchive, faBalanceScaleRight, faChevronDown, faCircle, faMapMarkedAlt, faPaperPlane, faPencilAlt, faStream, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArchive, faBalanceScaleRight, faChevronDown, faCircle, faPaperPlane, faPencilAlt, faStream, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { ProgressBar } from 'react-bootstrap';
 import TextareaAutosize from 'react-autosize-textarea';
 
@@ -14,7 +14,6 @@ import ConfirmFinishedModal from './confirm_finished_modal';
 
 import {
   HOST,
-  WEB_SOCKET_HOST,
   PENDING_STATUS_VALUE,
   IN_PROGRESS_STATUS_VALUE,
   FINISHED_STATUS_VALUE,
@@ -198,7 +197,6 @@ class TaskDetailModal extends Component {
       if (response.data.is_success) {
         this.setState({
           taskDetail: response.data.task_detail,
-          isEditTask: false,
           title: {value: response.data.task_detail.title, error: '', canSubmit: true},
           description: {value: response.data.task_detail.description, error: '', canSubmit: true},
           assigned: {

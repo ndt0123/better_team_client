@@ -84,7 +84,6 @@ class Main extends Component {
   }
 
   updateNameAndEmail = (fullName) => {
-    console.log('run hererrrr')
     this.setState({
       fullName: fullName
     })
@@ -173,14 +172,14 @@ class Main extends Component {
             >
               Dashboard
             </a>
-            <a href="/personal_workspace"
+            {/* <a href="/personal_workspace"
               className={
                 window.location.pathname.split("/").includes("personal_workspace") ?
                 "list-group-item list-group-item-action light-color bold-text active-hover active" :
                 "list-group-item list-group-item-action light-color bold-text active-hover"
               }>
               Your own workspace
-            </a>
+            </a> */}
             <div className="list-group-item list-group-item-action light-color border-none pad-l-15p pad-r-15p" onClick={() => {
               this.setState({
                 showNewWorkspaceModal: true
@@ -257,7 +256,7 @@ class Main extends Component {
               </ul>
             </div>
           </Navbar>
-          <div className={this.state.showSidebar ? "box-main-body pad-t-56p pad-l-0p pad-r-0p" : "box-main-body pad-t-56p pad-l-0p pad-r-0p toggled"}>
+          <div className={this.state.showSidebar ? "box-main-body pad-l-0p pad-r-0p" : "box-main-body pad-l-0p pad-r-0p toggled"}>
             <Router>
                 <Route path='/' component={Dashboard} exact />
                 <Route path='/dashboard' component={Dashboard} />
@@ -283,6 +282,7 @@ class Main extends Component {
         />
         <SearchingModal showModal={this.state.showSearchingModal}
           closeModal={this.closeSearchingModal}
+          getListWorkspaces={this.getListWorkspaces}
         />
       </div>
     );
